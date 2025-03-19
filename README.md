@@ -1,1 +1,1 @@
-# EventConnect
+##  Event Connect is a platform where users can discover and attend events, managers can create and manage events, and admins can oversee managers and the entire system. Easily browse, register, and stay updated on upcoming events!
