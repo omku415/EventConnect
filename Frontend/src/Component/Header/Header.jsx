@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
@@ -23,35 +24,36 @@ function Header() {
           </div>
           <ul
             tabIndex={0}
-             className="menu  dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-xl">
+            className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-xl"
+          >
             <li>
-              <a>About</a>
+              <Link to="/about">About</Link>
             </li>
             <li>
-              <a>Contact Us</a>
+              <Link to="/contact">Contact Us</Link>
             </li>
             <li>
-              <a>Rate Us</a>
+              <Link to="/rate-us">Rate Us</Link>
             </li>
-       </ul>   
+          </ul>
         </div>
-        <a className="btn btn-ghost text-2xl">EventConnect</a>
+        <Link to="/" className="btn btn-ghost text-2xl">EventConnect</Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 text-xl">
           <li>
-            <a>About</a>
+            <Link to="/about">About</Link>
           </li>
           <li>
-            <a>Contact Us</a>
+            <Link to="/contact">Contact Us</Link>
           </li>
           <li>
-            <a>Rate Us</a>
+            <Link to="/rate-us">Rate Us</Link>
           </li>
         </ul>
       </div>
-      <div className="navbar-end ">
-        <a className="btn text-xl">Login</a>
+      <div className="navbar-end">
+        <Link to="/login" className="btn text-xl">Login</Link>
       </div>
     </div>
   );
