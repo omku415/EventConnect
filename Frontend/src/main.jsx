@@ -3,19 +3,22 @@ import {
   BrowserRouter,
   createBrowserRouter,
   createRoutesFromElements,
+  Outlet,
   Route,
   RouterProvider,
 } from "react-router";
 import "./index.css";
-import App from "./App.jsx";
-import Header from "./Component/Header/Header.jsx";
 import Login from "./Component/Login/Login.jsx";
 import Layout from "./Layout.jsx";
+import Home from "./Component/Home/Home.jsx";
+import AboutUs from "./Component/AboutUs/AboutUs.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<Layout/>}>
+    <Route path="/" element={<Layout />}>
+      <Route index element={<Home />} />
       <Route path="login" element={<Login />} />
+      <Route path="about" element={<AboutUs />} />
     </Route>
   )
 );
