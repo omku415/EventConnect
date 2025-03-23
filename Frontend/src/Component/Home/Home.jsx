@@ -1,5 +1,6 @@
 import React from "react";
 import AboutUs from "../AboutUs/AboutUs";
+import ContactUs from "../ContactUs/ContactUs";
 
 function Home() {
   return (
@@ -7,26 +8,27 @@ function Home() {
       <div className="carousel w-full">
         <div id="item1" className="carousel-item w-full">
           <img
-            src="https://img.daisyui.com/images/stock/photo-1625726411847-8cbb60cc71e6.webp"
-            className="w-full"
+            src="https://images.pexels.com/photos/1190297/pexels-photo-1190297.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            className="w-full h-[500px]"
+            alt="Concert Audience"
           />
         </div>
         <div id="item2" className="carousel-item w-full">
           <img
-            src="https://img.daisyui.com/images/stock/photo-1609621838510-5ad474b7d25d.webp"
-            className="w-full"
+            src="https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            className="w-full h-[500px] "
           />
         </div>
         <div id="item3" className="carousel-item w-full">
           <img
-            src="https://img.daisyui.com/images/stock/photo-1414694762283-acccc27bca85.webp"
-            className="w-full"
+            src="https://images.pexels.com/photos/169190/pexels-photo-169190.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            className="w-full h-[500px]"
           />
         </div>
         <div id="item4" className="carousel-item w-full">
           <img
-            src="https://img.daisyui.com/images/stock/photo-1665553365602-b2fb8e5d1707.webp"
-            className="w-full"
+            src="https://images.pexels.com/photos/167636/pexels-photo-167636.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            className="w-full h-[500px]"
           />
         </div>
       </div>
@@ -46,6 +48,8 @@ function Home() {
       </div>
       {/* About Us Section */}
       <AboutUs />
+      {/* Contact Us Section */}
+      <ContactUs />
     </>
   );
 }
