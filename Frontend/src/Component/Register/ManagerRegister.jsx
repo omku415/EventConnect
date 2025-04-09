@@ -79,6 +79,7 @@ function ManagerRegister() {
           type="password"
           name="password"
           value={formData.password}
+          autoComplete="new-password" 
           onChange={handleChange}
           className="input w-full mt-1"
           placeholder="Password"
@@ -90,6 +91,7 @@ function ManagerRegister() {
           type="password"
           name="confirmPassword"
           value={formData.confirmPassword}
+          autoComplete="new-password" 
           onChange={handleChange}
           className="input w-full mt-1"
           placeholder="Confirm Password"

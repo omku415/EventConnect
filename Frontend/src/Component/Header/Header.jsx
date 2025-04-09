@@ -32,12 +32,11 @@ function Header() {
             <li>
               <Link to="/contact">Contact Us</Link>
             </li>
-            <li>
-              <Link to="/rate-us">Rate Us</Link>
-            </li>
           </ul>
         </div>
-        <Link to="/" className="btn btn-ghost text-2xl">EventConnect</Link>
+        <Link to="/" className="btn btn-ghost text-2xl">
+          EventConnect
+        </Link>
       </div>
       <div className="navbar-center hidden lg:flex">
         <ul className="menu menu-horizontal px-1 text-xl">
@@ -47,13 +46,12 @@ function Header() {
           <li>
             <Link to="/contact">Contact Us</Link>
           </li>
-          <li>
-            <Link to="/rate-us">Rate Us</Link>
-          </li>
         </ul>
       </div>
       <div className="navbar-end">
-        <Link to="/login" className="btn text-xl">Login</Link>
+        <Link to="/login" className="btn text-xl">
+          Login
+        </Link>
       </div>
     </div>
   );

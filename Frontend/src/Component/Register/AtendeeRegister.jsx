@@ -77,6 +77,7 @@ function AtendeeRegister() {
           className="input w-full mt-1"
           placeholder="Password"
           value={formData.password}
+          autoComplete="new-password" 
           onChange={handleChange}
           required
         />
@@ -87,6 +88,7 @@ function AtendeeRegister() {
           name="confirmPassword"
           className="input w-full mt-1"
           placeholder="Confirm Password"
+          autoComplete="new-password" 
           value={formData.confirmPassword}
           onChange={handleChange}
           required
