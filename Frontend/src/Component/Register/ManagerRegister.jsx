@@ -29,7 +29,7 @@ function ManagerRegister() {
       alert("Please enter a valid 10-digit phone number.");
       return;
     }
-  
+
     console.log(formData);
   };
 
@@ -41,8 +41,9 @@ function ManagerRegister() {
       >
         <legend className="text-lg font-semibold mb-2">Manager Registration</legend>
 
-        <label className="block mt-2">Name</label>
+        <label htmlFor="name" className="block mt-2">Name</label>
         <input
+          id="name"
           type="text"
           name="name"
           value={formData.name}
@@ -52,8 +53,9 @@ function ManagerRegister() {
           required
         />
 
-        <label className="block mt-3">Email</label>
+        <label htmlFor="email" className="block mt-3">Email</label>
         <input
+          id="email"
           type="email"
           name="email"
           value={formData.email}
@@ -63,8 +65,9 @@ function ManagerRegister() {
           required
         />
 
-        <label className="block mt-3">Phone Number</label> {/* New field */}
+        <label htmlFor="phone" className="block mt-3">Phone Number</label>
         <input
+          id="phone"
           type="tel"
           name="phone"
           value={formData.phone}
@@ -74,8 +77,9 @@ function ManagerRegister() {
           required
         />
 
-        <label className="block mt-3">Password</label>
+        <label htmlFor="password" className="block mt-3">Password</label>
         <input
+          id="password"
           type="password"
           name="password"
           value={formData.password}
@@ -86,8 +90,9 @@ function ManagerRegister() {
           required
         />
 
-        <label className="block mt-3">Confirm Password</label>
+        <label htmlFor="confirmPassword" className="block mt-3">Confirm Password</label>
         <input
+          id="confirmPassword"
           type="password"
           name="confirmPassword"
           value={formData.confirmPassword}
@@ -98,8 +103,9 @@ function ManagerRegister() {
           required
         />
 
-        <label className="block mt-3">Upload Resume</label>
+        <label htmlFor="resume" className="block mt-3">Upload Resume</label>
         <input
+          id="resume"
           type="file"
           name="resume"
           onChange={handleChange}

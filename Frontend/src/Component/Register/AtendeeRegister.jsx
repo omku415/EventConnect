@@ -37,8 +37,9 @@ function AtendeeRegister() {
       >
         <legend className="text-lg font-semibold mb-2">User Registration</legend>
 
-        <label className="block mt-2">Username</label>
+        <label htmlFor="username" className="block mt-2">Username</label>
         <input
+          id="username"
           type="text"
           name="username"
           className="input w-full mt-1"
@@ -48,8 +49,9 @@ function AtendeeRegister() {
           required
         />
 
-        <label className="block mt-3">Phone</label>
+        <label htmlFor="phone" className="block mt-3">Phone</label>
         <input
+          id="phone"
           type="tel"
           name="phone"
           className="input w-full mt-1"
@@ -59,8 +61,9 @@ function AtendeeRegister() {
           required
         />
 
-        <label className="block mt-3">Email</label>
+        <label htmlFor="email" className="block mt-3">Email</label>
         <input
+          id="email"
           type="email"
           name="email"
           className="input w-full mt-1"
@@ -70,25 +73,27 @@ function AtendeeRegister() {
           required
         />
 
-        <label className="block mt-3">Password</label>
+        <label htmlFor="password" className="block mt-3">Password</label>
         <input
+          id="password"
           type="password"
           name="password"
           className="input w-full mt-1"
           placeholder="Password"
           value={formData.password}
-          autoComplete="new-password" 
+          autoComplete="new-password"
           onChange={handleChange}
           required
         />
 
-        <label className="block mt-3">Confirm Password</label>
+        <label htmlFor="confirmPassword" className="block mt-3">Confirm Password</label>
         <input
+          id="confirmPassword"
           type="password"
           name="confirmPassword"
           className="input w-full mt-1"
           placeholder="Confirm Password"
-          autoComplete="new-password" 
+          autoComplete="new-password"
           value={formData.confirmPassword}
           onChange={handleChange}
           required

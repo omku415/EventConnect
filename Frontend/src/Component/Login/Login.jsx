@@ -17,8 +17,9 @@ function Login() {
         <fieldset>
           <legend className="text-lg font-semibold">Login</legend>
 
-          <label className="block mt-2">User Type</label>
+          <label htmlFor="userType" className="block mt-2">User Type</label>
           <select
+            id="userType"
             className="select w-full mt-1"
             value={userType}
             onChange={(e) => setUserType(e.target.value)}
@@ -29,8 +30,9 @@ function Login() {
             <option value="admin">Admin</option>
           </select>
 
-          <label className="block mt-3">Email</label>
+          <label htmlFor="email" className="block mt-3">Email</label>
           <input
+            id="email"
             type="email"
             name="email"
             autoComplete="email"
@@ -39,8 +41,9 @@ function Login() {
             required
           />
 
-          <label className="block mt-3">Password</label>
+          <label htmlFor="password" className="block mt-3">Password</label>
           <input
+            id="password"
             type="password"
             name="password"
             autoComplete="current-password"
