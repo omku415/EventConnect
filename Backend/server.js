@@ -9,6 +9,10 @@ const db = require("./config/db");
 
 app.use(cors());
 
+const attendeeRoutes = require("./routes/attendeeRoute");
+app.use("/attendees", attendeeRoutes);
+
+
 // Sample route
 app.get("/", (req, res) => {
   res.send("Server is running...");

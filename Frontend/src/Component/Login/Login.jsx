@@ -1,11 +1,36 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function Login() {
   const [userType, setUserType] = useState("attendee");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault(); // prevent page reload
-    console.log("Logging in as", userType);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    const endpointMap = {
+      attendee: "/attendees/login",
+      manager: "/managers/login",
+      admin: "/admins/login",
+    };
+
+    const loginEndpoint = endpointMap[userType];
+
+    try {
+      const res = await axios.post(`http://localhost:5000${loginEndpoint}`, {
+        email,
+        password,
+      });
+
+      alert(res.data.message); // Example message like "Login successful"
+      console.log("Login success:", res.data);
+
+      // TODO: Redirect to dashboard based on userType if needed
+    } catch (err) {
+      console.error(err);
+      alert("Login failed. Please check your credentials.");
+    }
   };
 
   return (
@@ -35,9 +60,10 @@ function Login() {
             id="email"
             type="email"
             name="email"
-            autoComplete="email"
             className="input w-full mt-1"
             placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             required
           />
 
@@ -46,9 +72,10 @@ function Login() {
             id="password"
             type="password"
             name="password"
-            autoComplete="current-password"
             className="input w-full mt-1"
             placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
 

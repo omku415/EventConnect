@@ -1,32 +1,44 @@
-import React, { useState } from 'react';
-
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 function AtendeeRegister() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    username: '',
-    phone: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "", // changed from username
+    phone: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {
-    setFormData({ 
-      ...formData, 
-      [e.target.name]: e.target.value 
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Simple validation example
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match.");
       return;
     }
 
-    console.log('Form submitted:', formData);
-    // TODO: Send to backend here
+    console.log("Form submitted:", formData);
+    try {
+      const { confirmPassword, ...userData } = formData;
+      const res = await axios.post(
+        "http://localhost:5000/attendees/register",
+        userData
+      );
+      alert(res.data.message);
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      alert("Registration failed.");
+    }
   };
 
   return (
@@ -37,14 +49,14 @@ function AtendeeRegister() {
       >
         <legend className="text-lg font-semibold mb-2">User Registration</legend>
 
-        <label htmlFor="username" className="block mt-2">Username</label>
+        <label htmlFor="name" className="block mt-2">Name</label>
         <input
-          id="username"
+          id="name"
           type="text"
-          name="username"
+          name="name"
           className="input w-full mt-1"
-          placeholder="Username"
-          value={formData.username}
+          placeholder="Name"
+          value={formData.name}
           onChange={handleChange}
           required
         />
@@ -99,10 +111,7 @@ function AtendeeRegister() {
           required
         />
 
-        <button
-          type="submit"
-          className="btn btn-primary w-full mt-5"
-        >
+        <button type="submit" className="btn btn-primary w-full mt-5">
           Register
         </button>
       </form>
