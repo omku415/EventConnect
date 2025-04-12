@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-function Header() {
+function MainNavbar() {
   return (
     <div className="navbar bg-base-300 shadow-sm text-4xl">
       <div className="navbar-start">
@@ -57,4 +57,4 @@ function Header() {
   );
 }
 
-export default Header;
+export default MainNavbar;
