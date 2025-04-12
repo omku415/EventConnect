@@ -25,7 +25,10 @@ function AtendeeRegister() {
       alert("Passwords do not match.");
       return;
     }
-
+    if (!/^\d{10}$/.test(formData.phone)) {
+      alert("Please enter a valid 10-digit phone number.");
+      return;
+    }
     console.log("Form submitted:", formData);
     try {
       const { confirmPassword, ...userData } = formData;

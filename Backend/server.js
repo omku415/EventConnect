@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
-
+//It converts parse the JSON data and populate req.body with the JavaScript object:
 app.use(express.json());
 
 const db = require("./config/db");

@@ -1,13 +1,14 @@
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
 import {
-  BrowserRouter,
   createBrowserRouter,
   createRoutesFromElements,
-  Outlet,
   Route,
   RouterProvider,
 } from "react-router";
+
 import "./index.css";
+import store from "./Redux/store";
 import Login from "./Component/Login/Login.jsx";
 import Layout from "./Layout.jsx";
 import Home from "./Component/Home/Home.jsx";
@@ -29,5 +30,7 @@ const router = createBrowserRouter(
 );
 
 createRoot(document.getElementById("root")).render(
+  <Provider store={store}> {/*store setup*/}
   <RouterProvider router={router} />
+</Provider>
 );
