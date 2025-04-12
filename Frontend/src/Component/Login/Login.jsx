@@ -1,10 +1,15 @@
 import React, { useState } from "react";
 import axios from "axios";
+// 👁️ Added password visibility toggle
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const [userType, setUserType] = useState("attendee");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  // 👁️ Added state to manage password visibility
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,10 +28,8 @@ function Login() {
         password,
       });
 
-      alert(res.data.message); // Example message like "Login successful"
+      alert(res.data.message);
       console.log("Login success:", res.data);
-
-      // TODO: Redirect to dashboard based on userType if needed
     } catch (err) {
       console.error(err);
       alert("Login failed. Please check your credentials.");
@@ -68,16 +71,25 @@ function Login() {
           />
 
           <label htmlFor="password" className="block mt-3">Password</label>
-          <input
-            id="password"
-            type="password"
-            name="password"
-            className="input w-full mt-1"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+          {/* 👁️ Replaced password input with toggleable version */}
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? "text" : "password"}
+              name="password"
+              className="input w-full mt-1 pr-10"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+            <span
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </span>
+          </div>
 
           <button type="submit" className="btn btn-neutral w-full mt-4">
             Login
