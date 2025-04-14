@@ -59,7 +59,7 @@ router.post("/login", (req, res) => {
     // You can include a token or user data here for frontend usage
     res.status(200).json({
       message: "Login successful",
-      user: {
+      attendee: {
         id: user.id,
         name: user.username,
         email: user.email,
@@ -68,9 +68,5 @@ router.post("/login", (req, res) => {
     });
   });
 });
-
-
-
-
 
 module.exports = router;

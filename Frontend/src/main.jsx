@@ -15,6 +15,7 @@ import Home from "./Component/Home/Home.jsx";
 import AboutUs from "./Component/AboutUs/AboutUs.jsx";
 import ContactUs from "./Component/ContactUs/ContactUs.jsx";
 import Register from "./Component/Register/Register.jsx";
+import AttendeeDashboard from "./Component/AttendeeDashboard/AttendeeDashboard.jsx"
 
 
 const router = createBrowserRouter(
@@ -25,6 +26,7 @@ const router = createBrowserRouter(
       <Route path="about" element={<AboutUs />} />
       <Route path="contact" element={<ContactUs />} />
       <Route path="register/:role" element={<Register />} />
+      <Route path="/attendee-dashboard" element={<AttendeeDashboard />} />
     </Route>
   )
 );

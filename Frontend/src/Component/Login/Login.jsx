@@ -1,15 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
-// 👁️ Added password visibility toggle
+import { login } from "../../Redux/authSlice";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 function Login() {
   const [userType, setUserType] = useState("attendee");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  // 👁️ Added state to manage password visibility
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,6 +32,11 @@ function Login() {
 
       alert(res.data.message);
       console.log("Login success:", res.data);
+      if (userType === "attendee") {
+        dispatch(login(res.data.attendee)); // Assuming response returns `attendee` object
+        localStorage.setItem("attendee", JSON.stringify(res.data.attendee));
+        navigate("/attendee-dashboard"); // or any dashboard route
+      }
     } catch (err) {
       console.error(err);
       alert("Login failed. Please check your credentials.");
@@ -45,7 +52,9 @@ function Login() {
         <fieldset>
           <legend className="text-lg font-semibold">Login</legend>
 
-          <label htmlFor="userType" className="block mt-2">User Type</label>
+          <label htmlFor="userType" className="block mt-2">
+            User Type
+          </label>
           <select
             id="userType"
             className="select w-full mt-1"
@@ -58,7 +67,9 @@ function Login() {
             <option value="admin">Admin</option>
           </select>
 
-          <label htmlFor="email" className="block mt-3">Email</label>
+          <label htmlFor="email" className="block mt-3">
+            Email
+          </label>
           <input
             id="email"
             type="email"
@@ -70,9 +81,10 @@ function Login() {
             required
           />
 
-          <label htmlFor="password" className="block mt-3">Password</label>
-          {/* 👁️ Replaced password input with toggleable version */}
-          <div className="relative">
+          <label htmlFor="password" className="block mt-3">
+            Password
+          </label>
+           <div className="relative">
             <input
               id="password"
               type={showPassword ? "text" : "password"}
