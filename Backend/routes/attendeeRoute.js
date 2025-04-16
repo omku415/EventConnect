@@ -2,6 +2,9 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
+//for  cloud
+const upload = require("../upload");
+const cloudinary = require("../cloudinary")
 
 // Attendee Registration Route
 router.post("/register", async (req, res) => {
@@ -68,5 +71,42 @@ router.post("/login", (req, res) => {
     });
   });
 });
+
+
+//update profile
+router.post(
+  "/update-profile/:id",
+  upload.single("profile_image"),
+  (req, res) => {
+    const attendeeId = req.params.id;
+    const { name, phone } = req.body;
+
+    // Cloudinary gives you `path` or `secure_url`
+    const imageUrl = req.file ? req.file.path : null;
+
+    const updateQuery = `
+      UPDATE attendees 
+      SET name = ?, phone = ?, profile_image = ? 
+      WHERE id = ?
+    `;
+
+    db.query(updateQuery, [name, phone, imageUrl, attendeeId], (err, result) => {
+      if (err) {
+        console.error("Update error:", err);
+        return res.status(500).json({ error: "Something went wrong." });
+      }
+
+      res.status(200).json({
+        message: "Profile updated successfully.",
+        updatedData: {
+          id: attendeeId,
+          name,
+          phone,
+          profile_image: imageUrl, // This is the Cloudinary URL
+        },
+      });
+    });
+  }
+);
 
 module.exports = router;

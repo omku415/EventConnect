@@ -16,6 +16,7 @@ import AboutUs from "./Component/AboutUs/AboutUs.jsx";
 import ContactUs from "./Component/ContactUs/ContactUs.jsx";
 import Register from "./Component/Register/Register.jsx";
 import AttendeeDashboard from "./Component/AttendeeDashboard/AttendeeDashboard.jsx"
+import UpdateProfile from "./Component/UpdateProfile/UpdateProfile.jsx";
 
 
 const router = createBrowserRouter(
@@ -27,6 +28,8 @@ const router = createBrowserRouter(
       <Route path="contact" element={<ContactUs />} />
       <Route path="register/:role" element={<Register />} />
       <Route path="/attendee-dashboard" element={<AttendeeDashboard />} />
+      <Route path="/update-profile" element={<UpdateProfile />} />
+
     </Route>
   )
 );
