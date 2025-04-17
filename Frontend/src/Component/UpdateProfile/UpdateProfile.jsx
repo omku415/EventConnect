@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/authSlice";
+import { login } from "../../Redux/authSlice";
 
 const UpdateProfile = () => {
   const { attendee } = useSelector((state) => state.auth);
@@ -12,6 +12,18 @@ const UpdateProfile = () => {
     phone: attendee?.phone || "",
     profile_image: null,
   });
+
+  useEffect(() => {
+    if (attendee) {
+      setFormData({
+        name: attendee.name || "",
+        phone: attendee.phone || "",
+        profile_image: attendee.profile_image || null,
+      });
+    }
+  }, [attendee]);
+  
+  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,8 +41,12 @@ const UpdateProfile = () => {
     e.preventDefault();
 
     const data = new FormData();
-    data.append("name", formData.name);
-    data.append("phone", formData.phone);
+    if (formData.name) {
+      data.append("name", formData.name);
+    }
+    if (formData.phone) {
+      data.append("phone", formData.phone);
+    }
     if (formData.profile_image) {
       data.append("profile_image", formData.profile_image);
     }

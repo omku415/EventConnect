@@ -64,9 +64,10 @@ router.post("/login", (req, res) => {
       message: "Login successful",
       attendee: {
         id: user.id,
-        name: user.username,
+        name: user.name,
         email: user.email,
         phone: user.phone,
+        profile_image: user.profile_image,
       },
     });
   });
@@ -81,16 +82,44 @@ router.post(
     const attendeeId = req.params.id;
     const { name, phone } = req.body;
 
-    // Cloudinary gives you `path` or `secure_url`
-    const imageUrl = req.file ? req.file.path : null;
+    // Check if the user has uploaded a new image
+    const imageUrl = req.file ? req.file.path : null; // Cloudinary URL if image uploaded
 
-    const updateQuery = `
-      UPDATE attendees 
-      SET name = ?, phone = ?, profile_image = ? 
-      WHERE id = ?
-    `;
+    // Initialize an object to hold the fields to update
+    let updatedFields = {};
+    let queryParams = [];
 
-    db.query(updateQuery, [name, phone, imageUrl, attendeeId], (err, result) => {
+    // Add fields to update only if they are provided
+    if (name) {
+      updatedFields.name = name;
+    }
+    if (phone) {
+      updatedFields.phone = phone;
+    }
+    if (imageUrl) {
+      updatedFields.profile_image = imageUrl;
+    }
+
+    // If no fields to update, return an error
+    if (Object.keys(updatedFields).length === 0) {
+      return res.status(400).json({ error: "No fields to update." });
+    }
+
+    // Create the update query dynamically
+    let updateQuery = "UPDATE attendees SET ";
+    Object.keys(updatedFields).forEach((field, index) => {
+      updateQuery += `${field} = ?`;
+      queryParams.push(updatedFields[field]);
+      if (index < Object.keys(updatedFields).length - 1) {
+        updateQuery += ", ";
+      }
+    });
+
+    updateQuery += " WHERE id = ?";
+    queryParams.push(attendeeId); // Add attendeeId as the last parameter
+
+    // Execute the query
+    db.query(updateQuery, queryParams, (err, result) => {
       if (err) {
         console.error("Update error:", err);
         return res.status(500).json({ error: "Something went wrong." });
@@ -100,9 +129,7 @@ router.post(
         message: "Profile updated successfully.",
         updatedData: {
           id: attendeeId,
-          name,
-          phone,
-          profile_image: imageUrl, // This is the Cloudinary URL
+          ...updatedFields,
         },
       });
     });
