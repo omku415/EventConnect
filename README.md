@@ -5,13 +5,13 @@ Event Connect is a platform that bridges the gap between event organizers and at
 
 ### Attendees:
 
-Register, log in, and browse a wide range of events.
+-Register, log in, and browse a wide range of events.
 <br>
-Join events and provide feedback after attendance.
+-Join events and provide feedback after attendance.
 
 ### Managers:
 
-Register and upload a resume for admin approval.
+-Register and upload a resume for admin approval.
 <br>
 -Once approved, manage and post events.
 <br>
