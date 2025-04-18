@@ -4,5 +4,7 @@ CREATE TABLE IF NOT EXISTS attendees (
   phone VARCHAR(20) NOT NULL,
   email VARCHAR(100) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
-  profile_image TEXT
+  profile_image TEXT,
+  passwordResetToken VARCHAR(255),
+  passwordResetTokenExpiration BIGINT
 );

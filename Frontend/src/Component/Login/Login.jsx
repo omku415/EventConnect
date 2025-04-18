@@ -25,7 +25,7 @@ function Login() {
     const loginEndpoint = endpointMap[userType];
 
     try {
-      const res = await axios.post(`http://localhost:5000${loginEndpoint}`, {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}${loginEndpoint}`, {
         email,
         password,
       });
@@ -84,7 +84,7 @@ function Login() {
           <label htmlFor="password" className="block mt-3">
             Password
           </label>
-           <div className="relative">
+          <div className="relative">
             <input
               id="password"
               type={showPassword ? "text" : "password"}
@@ -108,13 +108,19 @@ function Login() {
           </button>
 
           {(userType === "attendee" || userType === "manager") && (
-            <div className="text-center mt-3">
+            <div className="flex justify-between mt-3 text-sm">
               <a
                 href={`/register/${userType}`}
                 className="text-black hover:text-blue-600 transition duration-200"
               >
                 Register as{" "}
                 <span className="underline font-semibold">{userType}</span>
+              </a>
+              <a
+                href="/forgot-password"
+                className="text-black hover:text-blue-600 transition duration-200"
+              >
+                Forgot Password?
               </a>
             </div>
           )}

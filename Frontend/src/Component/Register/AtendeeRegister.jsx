@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+
 function AtendeeRegister() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -33,7 +35,7 @@ function AtendeeRegister() {
     try {
       const { confirmPassword, ...userData } = formData;
       const res = await axios.post(
-        "http://localhost:5000/attendees/register",
+        `${import.meta.env.VITE_BACKEND_URL}/attendees/register`,
         userData
       );
       alert(res.data.message);

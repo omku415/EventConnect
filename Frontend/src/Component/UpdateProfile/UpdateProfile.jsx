@@ -53,7 +53,7 @@ const UpdateProfile = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:5000/attendees/update-profile/${attendee.id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/attendees/update-profile/${attendee.id}`,
         data,
         { headers: { "Content-Type": "multipart/form-data" } }
       );
