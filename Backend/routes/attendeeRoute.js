@@ -110,6 +110,7 @@ router.post(
     Object.keys(updatedFields).forEach((field, index) => {
       updateQuery += `${field} = ?`;
       queryParams.push(updatedFields[field]);
+      
       if (index < Object.keys(updatedFields).length - 1) {
         updateQuery += ", ";
       }

@@ -15,9 +15,10 @@ import Home from "./Component/Home/Home.jsx";
 import AboutUs from "./Component/AboutUs/AboutUs.jsx";
 import ContactUs from "./Component/ContactUs/ContactUs.jsx";
 import Register from "./Component/Register/Register.jsx";
-import AttendeeDashboard from "./Component/AttendeeDashboard/AttendeeDashboard.jsx"
+import AttendeeDashboard from "./Component/AttendeeDashboard/AttendeeDashboard.jsx";
 import UpdateProfile from "./Component/UpdateProfile/UpdateProfile.jsx";
-
+import ForgotPassword from "./Component/ForgotPassword/ForgotPassword.jsx";
+import ResetPassword from "./Component/ForgotPassword/ResetPassword.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,13 +30,16 @@ const router = createBrowserRouter(
       <Route path="register/:role" element={<Register />} />
       <Route path="/attendee-dashboard" element={<AttendeeDashboard />} />
       <Route path="/update-profile" element={<UpdateProfile />} />
-
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
     </Route>
   )
 );
 
 createRoot(document.getElementById("root")).render(
-  <Provider store={store}> {/*store setup*/}
-  <RouterProvider router={router} />
-</Provider>
+  <Provider store={store}>
+    {" "}
+    {/*store setup*/}
+    <RouterProvider router={router} />
+  </Provider>
 );
