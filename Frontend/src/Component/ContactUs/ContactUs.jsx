@@ -22,7 +22,7 @@ function ContactUs() {
               <input
                 type="hidden"
                 name="access_key"
-                value="166f1d31-2790-491a-8c35-3ac598838ad1"
+                value={import.meta.env.VITE_ACCESS_KEY}
               />
 
               <div>
