@@ -22,8 +22,6 @@ const UpdateProfile = () => {
       });
     }
   }, [attendee]);
-  
-  
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,10 +50,20 @@ const UpdateProfile = () => {
     }
 
     try {
+      // ✅ Get the token from localStorage
+      const token = localStorage.getItem("token");
       const res = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/attendees/update-profile/${attendee.id}`,
+        `${import.meta.env.VITE_BACKEND_URL}/attendees/update-profile/${
+          attendee.id
+        }`,
         data,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        {
+          headers: {
+            //"Hey! I’m sending data that includes one or more files, not just plain JSON or text."
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
       dispatch(login(res.data.updatedData));
       alert("Profile updated successfully!");

@@ -1,18 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../../Redux/authSlice"; 
+import { logout } from "../../Redux/authSlice";
 import { useNavigate } from "react-router-dom";
 
 function AttendeeNavbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem("attendee");
-    navigate("/"); 
+    navigate("/");
   };
   return (
     <div className="navbar bg-base-300 shadow-sm text-4xl">
@@ -40,10 +39,7 @@ function AttendeeNavbar() {
             className="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow text-xl"
           >
             <li>
-              <Link to="/about">About</Link>
-            </li>
-            <li>
-              <Link to="/contact">Contact Us</Link>
+              <Link to="/update-profile">Update Profile</Link>
             </li>
           </ul>
         </div>
@@ -52,8 +48,8 @@ function AttendeeNavbar() {
         </Link>
       </div>
 
-      {/* Middle */}
-      <div className="navbar-center">
+      {/* Middle: Hide Update Profile button in mobile mode */}
+      <div className="navbar-center lg:block hidden">
         <Link to="/update-profile" className="btn text-xl">
           Update Profile
         </Link>

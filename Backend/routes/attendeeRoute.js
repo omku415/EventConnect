@@ -2,9 +2,14 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const authenticateToken = require('../authenticateToken');
 //for  cloud
 const upload = require("../upload");
-const cloudinary = require("../cloudinary")
+const cloudinary = require("../cloudinary");
+require("dotenv").config(); // To load the environment variables
+
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 // Attendee Registration Route
 router.post("/register", async (req, res) => {
@@ -54,6 +59,11 @@ router.post("/login", (req, res) => {
     const user = results[0];
 
     const isMatch = await bcrypt.compare(password, user.password);
+    const token = jwt.sign(
+      { userId: user.id, email: user.email }, // Payload: you can add other data if needed
+      jwtSecretKey, // Your secret key to sign the token
+      { expiresIn: "1h" } // Expiration time for the token
+    );
 
     if (!isMatch) {
       return res.status(401).json({ message: "Invalid credentials" });
@@ -62,6 +72,7 @@ router.post("/login", (req, res) => {
     // You can include a token or user data here for frontend usage
     res.status(200).json({
       message: "Login successful",
+      token,
       attendee: {
         id: user.id,
         name: user.name,
@@ -73,10 +84,10 @@ router.post("/login", (req, res) => {
   });
 });
 
-
 //update profile
 router.post(
   "/update-profile/:id",
+  authenticateToken, 
   upload.single("profile_image"),
   (req, res) => {
     const attendeeId = req.params.id;
@@ -110,7 +121,7 @@ router.post(
     Object.keys(updatedFields).forEach((field, index) => {
       updateQuery += `${field} = ?`;
       queryParams.push(updatedFields[field]);
-      
+
       if (index < Object.keys(updatedFields).length - 1) {
         updateQuery += ", ";
       }

@@ -35,6 +35,7 @@ function Login() {
       if (userType === "attendee") {
         dispatch(login(res.data.attendee)); // Assuming response returns `attendee` object
         localStorage.setItem("attendee", JSON.stringify(res.data.attendee));
+        localStorage.setItem("token", res.data.token);
         navigate("/attendee-dashboard"); // or any dashboard route
       }
     } catch (err) {
