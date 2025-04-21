@@ -1,25 +1,27 @@
-import React, { useState } from 'react';
-
+import React, { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 function ManagerRegister() {
+   const navigate = useNavigate()
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',              
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
     resume: null,
   });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (name === 'resume') {
+    if (name === "resume") {
       setFormData({ ...formData, resume: files[0] });
     } else {
       setFormData({ ...formData, [name]: value });
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       alert("Passwords do not match.");
@@ -29,8 +31,31 @@ function ManagerRegister() {
       alert("Please enter a valid 10-digit phone number.");
       return;
     }
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("phone", formData.phone);
+    formDataToSend.append("password", formData.password);
+    formDataToSend.append("confirmPassword", formData.confirmPassword);
+    formDataToSend.append("resume", formData.resume);  
 
-    console.log(formData);
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/managers/register`,
+        formDataToSend,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      alert(res.data.message);
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      alert("Registration failed.");
+    }
+   
   };
 
   return (
@@ -39,9 +64,13 @@ function ManagerRegister() {
         onSubmit={handleSubmit}
         className="w-96 bg-base-200 border border-base-300 p-6 rounded-box shadow-lg"
       >
-        <legend className="text-lg font-semibold mb-2">Manager Registration</legend>
+        <legend className="text-lg font-semibold mb-2">
+          Manager Registration
+        </legend>
 
-        <label htmlFor="name" className="block mt-2">Name</label>
+        <label htmlFor="name" className="block mt-2">
+          Name
+        </label>
         <input
           id="name"
           type="text"
@@ -53,7 +82,9 @@ function ManagerRegister() {
           required
         />
 
-        <label htmlFor="email" className="block mt-3">Email</label>
+        <label htmlFor="email" className="block mt-3">
+          Email
+        </label>
         <input
           id="email"
           type="email"
@@ -65,7 +96,9 @@ function ManagerRegister() {
           required
         />
 
-        <label htmlFor="phone" className="block mt-3">Phone Number</label>
+        <label htmlFor="phone" className="block mt-3">
+          Phone Number
+        </label>
         <input
           id="phone"
           type="tel"
@@ -77,33 +110,39 @@ function ManagerRegister() {
           required
         />
 
-        <label htmlFor="password" className="block mt-3">Password</label>
+        <label htmlFor="password" className="block mt-3">
+          Password
+        </label>
         <input
           id="password"
           type="password"
           name="password"
           value={formData.password}
-          autoComplete="new-password" 
+          autoComplete="new-password"
           onChange={handleChange}
           className="input w-full mt-1"
           placeholder="Password"
           required
         />
 
-        <label htmlFor="confirmPassword" className="block mt-3">Confirm Password</label>
+        <label htmlFor="confirmPassword" className="block mt-3">
+          Confirm Password
+        </label>
         <input
           id="confirmPassword"
           type="password"
           name="confirmPassword"
           value={formData.confirmPassword}
-          autoComplete="new-password" 
+          autoComplete="new-password"
           onChange={handleChange}
           className="input w-full mt-1"
           placeholder="Confirm Password"
           required
         />
 
-        <label htmlFor="resume" className="block mt-3">Upload Resume</label>
+        <label htmlFor="resume" className="block mt-3">
+          Upload Resume
+        </label>
         <input
           id="resume"
           type="file"

@@ -20,6 +20,9 @@ app.use("/", passwordResetRoutes);
 const adminRoutes = require("./routes/adminRoutes");
 app.use("/admin", adminRoutes);
 
+const managerRoutes=require("./routes/managerRoute");
+app.use("/managers",managerRoutes)
+
 // Sample route
 app.get("/", (req, res) => {
   res.send("Server is running...");
