@@ -3,7 +3,7 @@ import React from 'react'
 function AttendeeDashboard() {
   return (
     <div>
-      hi
+      Attendee..
     </div>
   )
 }

@@ -9,14 +9,16 @@ const db = require("./config/db");
 
 app.use(cors());
 
-//attendee roues 
+//attendee routes
 const attendeeRoutes = require("./routes/attendeeRoute");
 app.use("/attendees", attendeeRoutes);
 
 //forgot password routes
-const passwordResetRoutes = require('./routes/passwordResetRoutes');
-app.use('/', passwordResetRoutes); 
+const passwordResetRoutes = require("./routes/passwordResetRoutes");
+app.use("/", passwordResetRoutes);
 
+const adminRoutes = require("./routes/adminRoutes");
+app.use("/admin", adminRoutes);
 
 // Sample route
 app.get("/", (req, res) => {

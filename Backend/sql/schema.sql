@@ -8,3 +8,9 @@ CREATE TABLE IF NOT EXISTS attendees (
   passwordResetToken VARCHAR(255),
   passwordResetTokenExpiration BIGINT
 );
+
+CREATE TABLE IF NOT EXISTS admin (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL
+);

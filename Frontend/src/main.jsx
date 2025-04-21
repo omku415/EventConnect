@@ -19,6 +19,8 @@ import AttendeeDashboard from "./Component/AttendeeDashboard/AttendeeDashboard.j
 import UpdateProfile from "./Component/UpdateProfile/UpdateProfile.jsx";
 import ForgotPassword from "./Component/ForgotPassword/ForgotPassword.jsx";
 import ResetPassword from "./Component/ForgotPassword/ResetPassword.jsx";
+import AdminDashboard from "./Component/AttendeeDashboard/AdminDashboard.jsx";
+import ProtectedRoute from "./Component/ProtecetedRoutes/profileProtectedRoutes.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,9 +31,17 @@ const router = createBrowserRouter(
       <Route path="contact" element={<ContactUs />} />
       <Route path="register/:role" element={<Register />} />
       <Route path="/attendee-dashboard" element={<AttendeeDashboard />} />
-      <Route path="/update-profile" element={<UpdateProfile />} />
+      <Route
+        path="/update-profile"
+        element={
+          <ProtectedRoute>
+            <UpdateProfile />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
+      <Route path="/admin-dashboard" element={<AdminDashboard />} />
     </Route>
   )
 );

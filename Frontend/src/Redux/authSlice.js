@@ -12,10 +12,11 @@ const loadFromLocalStorage = () => {
   }
 };
 
-
 const initialState = {
-  isLoggedIn: false,   
-  attendee:loadFromLocalStorage(),      
+  isLoggedIn: false,
+  attendee: loadFromLocalStorage(),
+  admin: loadFromLocalStorage("admin"),
+  token: null,
 };
 
 const authSlice = createSlice({
@@ -23,19 +24,31 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     login: (state, action) => {
+      const { userType, userData, token } = action.payload;
       state.isLoggedIn = true;
-      state.attendee = action.payload;
-      // Save to localStorage whenever the state is updated
-      localStorage.setItem("attendee", JSON.stringify(action.payload));
+
+      if (userType === "attendee") {
+        state.attendee = userData;
+        localStorage.setItem("attendee", JSON.stringify(userData));
+        
+      } else if (userType === "admin") {
+        state.admin = userData;
+        localStorage.setItem("admin", JSON.stringify(userData));
+      }
+      state.token = token; 
+      localStorage.setItem("token", token); 
     },
     logout: (state) => {
       state.isLoggedIn = false;
       state.attendee = null;
-      localStorage.removeItem("attendee"); // Remove from localStorage on logout
-    }
-  }
+      state.admin = null;
+      state.token = null;
+      localStorage.removeItem("attendee");
+      localStorage.removeItem("admin");
+      localStorage.removeItem("token");
+    },
+  },
 });
-
 
 export const { login, logout } = authSlice.actions;
 

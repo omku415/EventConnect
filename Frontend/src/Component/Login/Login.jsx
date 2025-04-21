@@ -19,24 +19,47 @@ function Login() {
     const endpointMap = {
       attendee: "/attendees/login",
       manager: "/managers/login",
-      admin: "/admins/login",
+      admin: "/admin/login",
     };
 
     const loginEndpoint = endpointMap[userType];
 
     try {
-      const res = await axios.post(`${import.meta.env.VITE_BACKEND_URL}${loginEndpoint}`, {
-        email,
-        password,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}${loginEndpoint}`,
+        {
+          email,
+          password,
+        }
+      );
 
       alert(res.data.message);
       console.log("Login success:", res.data);
+
       if (userType === "attendee") {
-        dispatch(login(res.data.attendee)); // Assuming response returns `attendee` object
+        dispatch(
+          login({
+            userType: "attendee",
+            userData: res.data.attendee,
+            token: res.data.token,
+          })
+        );
         localStorage.setItem("attendee", JSON.stringify(res.data.attendee));
         localStorage.setItem("token", res.data.token);
-        navigate("/attendee-dashboard"); // or any dashboard route
+        navigate("/attendee-dashboard");
+
+        
+      } else if (userType === "admin") {
+        dispatch(
+          login({
+            userType: "admin",
+            userData: res.data.admin,
+            token: res.data.token,
+          })
+        );
+        localStorage.setItem("admin", JSON.stringify(res.data.admin));
+        localStorage.setItem("token", res.data.token);
+        navigate("/admin-dashboard");
       }
     } catch (err) {
       console.error(err);
@@ -80,6 +103,7 @@ function Login() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
+            autoComplete="email"
           />
 
           <label htmlFor="password" className="block mt-3">
@@ -95,6 +119,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
+               autoComplete="current-password"
             />
             <span
               className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
