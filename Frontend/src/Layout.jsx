@@ -9,11 +9,29 @@ import { login } from "./Redux/authSlice"; // Adjust path if needed
 
 function Layout() {
   const dispatch = useDispatch();
-  const { isLoggedIn, attendee,admin } = useSelector((state) => state.auth);
+  const { isLoggedIn, attendee, admin } = useSelector((state) => state.auth);
+
   useEffect(() => {
+    const storedAdmin = localStorage.getItem("admin");
     const storedAttendee = localStorage.getItem("attendee");
-    if (storedAttendee) {
-      dispatch(login(JSON.parse(storedAttendee)));
+    const token = localStorage.getItem("token");
+
+    if (storedAdmin) {
+      dispatch(
+        login({
+          userType: "admin",
+          userData: JSON.parse(storedAdmin),
+          token,
+        })
+      );
+    } else if (storedAttendee) {
+      dispatch(
+        login({
+          userType: "attendee",
+          userData: JSON.parse(storedAttendee),
+          token,
+        })
+      );
     }
   }, [dispatch]);
 

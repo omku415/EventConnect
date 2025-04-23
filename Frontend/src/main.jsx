@@ -19,8 +19,9 @@ import AttendeeDashboard from "./Component/AttendeeDashboard/AttendeeDashboard.j
 import UpdateProfile from "./Component/UpdateProfile/UpdateProfile.jsx";
 import ForgotPassword from "./Component/ForgotPassword/ForgotPassword.jsx";
 import ResetPassword from "./Component/ForgotPassword/ResetPassword.jsx";
-import AdminDashboard from "./Component/AttendeeDashboard/AdminDashboard.jsx";
+import AdminDashboard from "./Component/AdminDashboard/AdminDashboard.jsx";
 import ProtectedRoute from "./Component/ProtecetedRoutes/profileProtectedRoutes.jsx";
+import PendingManagers from "./Component/PendingManager/pendingManager.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -42,6 +43,7 @@ const router = createBrowserRouter(
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
+      <Route path="/pending-managers" element={<PendingManagers/>}/>
     </Route>
   )
 );

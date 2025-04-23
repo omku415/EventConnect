@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
-const uploadResume = require("../uploadResume"); 
+const uploadResume = require("../Cloudinary/uploadResume"); 
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
@@ -23,7 +23,7 @@ router.post("/register", uploadResume.single("resume"), async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const resumeUrl = req.file.path; // Cloudinary resume URL
+    const resumeUrl = req.file.path;
 
     const insertQuery = `
       INSERT INTO managers (name, phone, email, password, resume_url, is_verified)

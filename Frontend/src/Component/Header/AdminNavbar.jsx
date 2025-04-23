@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { logout } from "../../Redux/authSlice";
 import { useNavigate } from "react-router-dom";
 
+
 function AdminNavbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,7 +41,7 @@ function AdminNavbar() {
             className="menu dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow text-lg"
           >
             <li>
-              <Link to="/verify-manager">Verify Manager</Link>
+              <Link to="/pending-managers">Verify Manager</Link>
             </li>
             <li>
               <Link to="/view-events">View Events</Link>
@@ -57,7 +58,7 @@ function AdminNavbar() {
 
       {/* Middle - visible on large screens only */}
       <div className="navbar-center hidden lg:flex gap-4">
-        <Link to="/verify-manager" className="btn btn-ghost text-lg">
+        <Link to="/pending-managers" className="btn btn-ghost text-lg">
           Verify Manager
         </Link>
         <Link to="/view-events" className="btn btn-ghost text-lg">

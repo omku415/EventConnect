@@ -21,3 +21,5 @@ const sendPasswordResetEmail = async (toEmail, resetLink) => {
     console.error("Error sending email:",  error.response?.body || error.message || error);
   }
 };
+
+module.exports = sendPasswordResetEmail

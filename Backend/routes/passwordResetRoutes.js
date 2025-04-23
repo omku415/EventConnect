@@ -4,6 +4,7 @@ const crypto = require("crypto");
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
+const sendPasswordResetEmail = require("../sendEmail/sendForgotPassword");
 
 // POST /forgot-password
 const sgMail = require("@sendgrid/mail"); // Import SendGrid
@@ -13,11 +14,9 @@ router.post("/forgot-password", (req, res) => {
   const { email, userType } = req.body;
 
   if (userType !== "attendee") {
-    return res
-      .status(400)
-      .json({
-        message: "Only attendee password reset is supported at the moment.",
-      });
+    return res.status(400).json({
+      message: "Only attendee password reset is supported at the moment.",
+    });
   }
 
   // Check if attendee with the given email exists
@@ -41,34 +40,25 @@ router.post("/forgot-password", (req, res) => {
     // Save the token and expiration in the database
     const updateQuery =
       "UPDATE attendees SET passwordResetToken = ?, passwordResetTokenExpiration = ? WHERE email = ?";
-    db.query(updateQuery, [resetToken, resetTokenExpiration, email], (err) => {
-      if (err) {
-        console.error("Error updating token:", err);
-        return res.status(500).json({ message: "Error saving reset token" });
-      }
+    db.query(
+      updateQuery,
+      [resetToken, resetTokenExpiration, email],
+      async (err) => {
+        if (err) {
+          console.error("Error updating token:", err);
+          return res.status(500).json({ message: "Error saving reset token" });
+        }
 
-      // Generate reset URL with the token
-      const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-
-      // Send the email with the reset link
-      const msg = {
-        to: email,
-        from: process.env.SENDGRID_SENDER_EMAIL, // Use your verified sender email
-        subject: "Password Reset Request",
-        html: `<p>We received a request to reset your password. Click the link below to reset it:</p><p><a href="${resetUrl}">${resetUrl}</a></p><p>This link will expire in 1 hour.</p>`,
-      };
-
-      sgMail
-        .send(msg)
-        .then(() => {
-          console.log("Password reset email sent");
+        // Generate reset URL with the token
+        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        try {
+          await sendPasswordResetEmail(email, resetUrl);
           return res.status(200).json({ message: "Password reset email sent" });
-        })
-        .catch((error) => {
-          console.error("Error sending email:", error);
+        } catch (error) {
           return res.status(500).json({ message: "Error sending reset email" });
-        });
-    });
+        }
+      }
+    );
   });
 });
 

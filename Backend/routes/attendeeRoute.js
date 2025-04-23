@@ -5,8 +5,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const authenticateToken = require('../authenticateToken');
 //for  cloud
-const upload = require("../upload");
-const cloudinary = require("../cloudinary");
+const upload = require("../Cloudinary/upload");
+const cloudinary = require("../Cloudinary/cloudinary");
 require("dotenv").config(); // To load the environment variables
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
