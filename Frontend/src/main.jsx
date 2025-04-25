@@ -8,6 +8,7 @@ import {
 } from "react-router";
 
 import "./index.css";
+import Toast from "../Toast.jsx";
 import store from "./Redux/store";
 import Login from "./Component/Login/Login.jsx";
 import Layout from "./Layout.jsx";
@@ -22,6 +23,7 @@ import ResetPassword from "./Component/ForgotPassword/ResetPassword.jsx";
 import AdminDashboard from "./Component/AdminDashboard/AdminDashboard.jsx";
 import ProtectedRoute from "./Component/ProtecetedRoutes/profileProtectedRoutes.jsx";
 import PendingManagers from "./Component/PendingManager/pendingManager.jsx";
+import ManagerDashboard from "./Component/ManagerDashboard/ManagerDashboard.jsx"
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -43,7 +45,8 @@ const router = createBrowserRouter(
       <Route path="/forgot-password" element={<ForgotPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
-      <Route path="/pending-managers" element={<PendingManagers/>}/>
+      <Route path="/pending-managers" element={<PendingManagers />} />
+      <Route path="manager-dashboard" element={<ManagerDashboard />} />
     </Route>
   )
 );
@@ -53,5 +56,6 @@ createRoot(document.getElementById("root")).render(
     {" "}
     {/*store setup*/}
     <RouterProvider router={router} />
+    <Toast/>
   </Provider>
 );

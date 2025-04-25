@@ -4,6 +4,7 @@ import { login } from "../../Redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Login() {
   const [userType, setUserType] = useState("attendee");
@@ -33,7 +34,7 @@ function Login() {
         }
       );
 
-      alert(res.data.message);
+      toast.success(res.data.message);
       console.log("Login success:", res.data);
 
       if (userType === "attendee") {
@@ -47,8 +48,6 @@ function Login() {
         localStorage.setItem("attendee", JSON.stringify(res.data.attendee));
         localStorage.setItem("token", res.data.token);
         navigate("/attendee-dashboard");
-
-        
       } else if (userType === "admin") {
         dispatch(
           login({
@@ -60,10 +59,33 @@ function Login() {
         localStorage.setItem("admin", JSON.stringify(res.data.admin));
         localStorage.setItem("token", res.data.token);
         navigate("/admin-dashboard");
+      } else {
+        dispatch(
+          login({
+            userType: "manager",
+            userData: res.data.manager,
+            token: res.data.token,
+          })
+        );
+        localStorage.setItem("manager", JSON.stringify(res.data.manager));
+        localStorage.setItem("token", res.data.token);
+        navigate("/manager-dashboard");
       }
     } catch (err) {
       console.error(err);
-      alert("Login failed. Please check your credentials.");
+      if (err.response) {
+        const { status, data } = err.response;
+
+        if (status === 403 && userType === "manager") {
+          toast.error(data.message); // ❌ manager not verified
+        } else if (status === 401) {
+          toast.error(data.message || "Invalid credentials.");
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
+      } else {
+        toast.error("Network error. Please try again.");
+      }
     }
   };
 
@@ -119,7 +141,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-               autoComplete="current-password"
+              autoComplete="current-password"
             />
             <span
               className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"

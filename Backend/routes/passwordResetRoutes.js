@@ -13,14 +13,17 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY); // Set SendGrid API key
 router.post("/forgot-password", (req, res) => {
   const { email, userType } = req.body;
 
-  if (userType !== "attendee") {
-    return res.status(400).json({
-      message: "Only attendee password reset is supported at the moment.",
-    });
+  let tableName;
+  if (userType === "attendee") {
+    tableName = "attendees";
+  } else if (userType === "manager") {
+    tableName = "managers";
+  } else {
+    return res.status(400).json({ message: "Invalid user type." });
   }
 
-  // Check if attendee with the given email exists
-  const query = "SELECT * FROM attendees WHERE email = ?";
+  // Check if the user exists in the selected table
+  const query = `SELECT * FROM ${tableName} WHERE email = ?`;
   db.query(query, [email], (err, results) => {
     if (err) {
       console.error("Database error:", err);
@@ -30,16 +33,19 @@ router.post("/forgot-password", (req, res) => {
     if (results.length === 0) {
       return res
         .status(404)
-        .json({ message: "No attendee found with this email" });
+        .json({ message: `No ${userType} found with this email` });
     }
 
-    // Attendee exists — Generate a reset token
-    const resetToken = crypto.randomBytes(32).toString("hex"); // 32 bytes for a secure token
-    const resetTokenExpiration = Date.now() + 3600000; // 1 hour expiration
+    // Generate a reset token
+    const resetToken = crypto.randomBytes(32).toString("hex");
+    const resetTokenExpiration = Date.now() + 3600000; // 1 hour
 
-    // Save the token and expiration in the database
-    const updateQuery =
-      "UPDATE attendees SET passwordResetToken = ?, passwordResetTokenExpiration = ? WHERE email = ?";
+    const updateQuery = `
+      UPDATE ${tableName}
+      SET passwordResetToken = ?, passwordResetTokenExpiration = ?
+      WHERE email = ?
+    `;
+
     db.query(
       updateQuery,
       [resetToken, resetTokenExpiration, email],
@@ -49,12 +55,13 @@ router.post("/forgot-password", (req, res) => {
           return res.status(500).json({ message: "Error saving reset token" });
         }
 
-        // Generate reset URL with the token
         const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+
         try {
           await sendPasswordResetEmail(email, resetUrl);
           return res.status(200).json({ message: "Password reset email sent" });
         } catch (error) {
+          console.error("SendGrid error:", error);
           return res.status(500).json({ message: "Error sending reset email" });
         }
       }
@@ -64,35 +71,57 @@ router.post("/forgot-password", (req, res) => {
 
 //
 router.post("/reset-password/:token", (req, res) => {
-  const { token } = req.params; // Token from the URL
-  const { newPassword } = req.body; // New password from the user
+  const { token } = req.params;
+  const { newPassword } = req.body;
 
-  // Validate the token in the database
-  const query = "SELECT * FROM attendees WHERE passwordResetToken = ?";
-  db.query(query, [token], (err, results) => {
+  // Define a reusable function to check a table for the token
+  const checkTableForToken = (tableName, callback) => {
+    const query = `SELECT * FROM ${tableName} WHERE passwordResetToken = ?`;
+    db.query(query, [token], (err, results) => {
+      if (err) return callback(err);
+      if (results.length === 0) return callback(null, null);
+      return callback(null, { tableName, user: results[0] });
+    });
+  };
+
+  // First check attendees, then managers
+  checkTableForToken("attendees", (err, result) => {
     if (err) {
       console.error("Database error:", err);
       return res.status(500).json({ message: "Internal server error" });
     }
 
-    if (results.length === 0) {
-      return res.status(400).json({ message: "Invalid or expired token" });
-    }
+    if (result) return handlePasswordReset(result);
 
-    const attendee = results[0];
+    // If not found in attendees, check managers
+    checkTableForToken("managers", (err, result) => {
+      if (err) {
+        console.error("Database error:", err);
+        return res.status(500).json({ message: "Internal server error" });
+      }
 
-    // Check if the token has expired
+      if (!result) {
+        return res.status(400).json({ message: "Invalid or expired token" });
+      }
+
+      return handlePasswordReset(result);
+    });
+  });
+
+  function handlePasswordReset({ tableName, user }) {
     const currentTime = Date.now();
-    if (attendee.passwordResetTokenExpiration < currentTime) {
+    if (user.passwordResetTokenExpiration < currentTime) {
       return res.status(400).json({ message: "Token has expired" });
     }
 
-    // Proceed to update the password
-    const hashedPassword = bcrypt.hashSync(newPassword, 10); // Hash the new password
-    const updateQuery =
-      "UPDATE attendees SET password = ?, passwordResetToken = NULL, passwordResetTokenExpiration = NULL WHERE email = ?";
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+    const updateQuery = `
+      UPDATE ${tableName}
+      SET password = ?, passwordResetToken = NULL, passwordResetTokenExpiration = NULL
+      WHERE email = ?
+    `;
 
-    db.query(updateQuery, [hashedPassword, attendee.email], (err) => {
+    db.query(updateQuery, [hashedPassword, user.email], (err) => {
       if (err) {
         console.error("Error updating password:", err);
         return res.status(500).json({ message: "Error updating password" });
@@ -100,7 +129,7 @@ router.post("/reset-password/:token", (req, res) => {
 
       return res.status(200).json({ message: "Password updated successfully" });
     });
-  });
+  }
 });
 
 module.exports = router;

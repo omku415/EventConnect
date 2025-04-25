@@ -3,6 +3,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { login } from "../../Redux/authSlice";
+import { toast } from "react-toastify";
 
 const UpdateProfile = () => {
   const { attendee } = useSelector((state) => state.auth);
@@ -66,10 +67,10 @@ const UpdateProfile = () => {
         }
       );
       dispatch(login(res.data.updatedData));
-      alert("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
     } catch (error) {
       console.error(error);
-      alert(`Update failed: ${error.response?.data?.error || error.message}`);
+      toast.error(`Update failed: ${error.response?.data?.error || error.message}`);
     }
   };
 

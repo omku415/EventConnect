@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS admin (
     password VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE managers (
+CREATE TABLE IF NOT EXISTS managers (
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
@@ -24,4 +24,6 @@ CREATE TABLE managers (
     resume_url TEXT,
     is_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    asswordResetToken VARCHAR(255),
+    passwordResetTokenExpiration BIGINT;
 );
