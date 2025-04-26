@@ -25,6 +25,7 @@ import ProtectedRoute from "./Component/ProtecetedRoutes/profileProtectedRoutes.
 import PendingManagers from "./Component/PendingManager/pendingManager.jsx";
 import ManagerDashboard from "./Component/ManagerDashboard/ManagerDashboard.jsx";
 import CreateEvent from "./Component/CreateEvents/CreateEvent.jsx";
+import EventDisplayA from "./Component/EventDisplay/EventDisplayA.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -48,7 +49,8 @@ const router = createBrowserRouter(
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/pending-managers" element={<PendingManagers />} />
       <Route path="manager-dashboard" element={<ManagerDashboard />} />
-      <Route path="create-events" element={<CreateEvent />} />
+      <Route path="/create-events" element={<CreateEvent />} />
+      <Route path="/verify-events" element={<EventDisplayA />} />
     </Route>
   )
 );

@@ -44,7 +44,7 @@ function AdminNavbar() {
               <Link to="/pending-managers">Verify Manager</Link>
             </li>
             <li>
-              <Link to="/view-events">View Events</Link>
+              <Link to="/verify-events">Verify Events</Link>
             </li>
             <li>
               <Link to="/manage-user">Manage User</Link>
@@ -61,8 +61,8 @@ function AdminNavbar() {
         <Link to="/pending-managers" className="btn btn-ghost text-lg">
           Verify Manager
         </Link>
-        <Link to="/view-events" className="btn btn-ghost text-lg">
-          View Events
+        <Link to="/verify-events" className="btn btn-ghost text-lg">
+          Verify Events
         </Link>
         <Link to="/manage-user" className="btn btn-ghost text-lg">
           Manage User

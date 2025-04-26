@@ -150,6 +150,18 @@ router.post("/reject-manager/:managerId", (req, res) => {
     });
   });
 });
+router.get("/verify-events", authenticateToken, (req, res) => {
+  const query = "SELECT * FROM events ORDER BY created_at DESC";
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Error fetching events:", err);
+      return res.status(500).json({ error: "Failed to fetch events." });
+    }
+
+    res.status(200).json({ events: results });
+  });
+});
 
 
 module.exports = router;
