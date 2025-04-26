@@ -27,3 +27,14 @@ CREATE TABLE IF NOT EXISTS managers (
     asswordResetToken VARCHAR(255),
     passwordResetTokenExpiration BIGINT;
 );
+CREATE TABLE events (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  event_name VARCHAR(255) NOT NULL,
+  image VARCHAR(500), -- Store the image URL here after upload
+  start_date DATE NOT NULL,
+  end_date DATE NOT NULL,
+  description TEXT NOT NULL,
+  type VARCHAR(100) NOT NULL,
+  status ENUM('Pending', 'Approved', 'Rejected') DEFAULT 'Pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);

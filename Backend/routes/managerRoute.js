@@ -2,8 +2,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
-const uploadResume = require("../Cloudinary/uploadResume"); 
+const uploadResume = require("../Cloudinary/uploadResume");
+const uploadEvents = require("../Cloudinary/uploadEvents");
 const jwt = require("jsonwebtoken");
+const authenticateToken = require('../authenticateToken');
 require("dotenv").config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
@@ -13,7 +15,9 @@ router.post("/register", uploadResume.single("resume"), async (req, res) => {
   const { name, phone, email, password, confirmPassword } = req.body;
 
   if (!name || !phone || !email || !password || !confirmPassword || !req.file) {
-    return res.status(400).json({ message: "Please fill all fields and upload resume" });
+    return res
+      .status(400)
+      .json({ message: "Please fill all fields and upload resume" });
   }
 
   if (password !== confirmPassword) {
@@ -30,14 +34,22 @@ router.post("/register", uploadResume.single("resume"), async (req, res) => {
       VALUES (?, ?, ?, ?, ?, false)
     `;
 
-    db.query(insertQuery, [name, phone, email, hashedPassword, resumeUrl], (err, result) => {
-      if (err) {
-        console.error("DB error:", err);
-        return res.status(500).json({ message: "Manager registration failed" });
-      }
+    db.query(
+      insertQuery,
+      [name, phone, email, hashedPassword, resumeUrl],
+      (err, result) => {
+        if (err) {
+          console.error("DB error:", err);
+          return res
+            .status(500)
+            .json({ message: "Manager registration failed" });
+        }
 
-      res.status(201).json({ message: "Registration successful. Awaiting admin approval." });
-    });
+        res.status(201).json({
+          message: "Registration successful. Awaiting admin approval.",
+        });
+      }
+    );
   } catch (err) {
     console.error("Server error:", err);
     res.status(500).json({ message: "Server error" });
@@ -72,7 +84,10 @@ router.post("/login", (req, res) => {
     }
 
     if (!manager.is_verified) {
-      return res.status(403).json({ message: "Your account is not yet verified. A confirmation email will be sent once verified." });
+      return res.status(403).json({
+        message:
+          "Your account is not yet verified. A confirmation email will be sent once verified.",
+      });
     }
 
     const token = jwt.sign(
@@ -94,5 +109,61 @@ router.post("/login", (req, res) => {
   });
 });
 
+router.post(
+  "/create-events",
+  authenticateToken,
+  uploadEvents.single("image"), // Assuming 'image' is the form field name for event image
+  (req, res) => {
+    const { event_name, start_date, end_date, description, type, status } =
+      req.body;
+
+    // Check if the event has uploaded a new image
+    const imageUrl = req.file ? req.file.path : null; // Cloudinary URL if image uploaded
+
+    // Directly use the fields to insert them
+    const eventFields = {
+      event_name,
+      start_date,
+      end_date,
+      description,
+      type,
+      status,
+      image: imageUrl, // Cloudinary URL for image
+    };
+
+    // Create the insert query
+    const insertQuery = `
+      INSERT INTO events (event_name, start_date, end_date, description, type, status, image)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+
+    // Values to be inserted into the database
+    const queryParams = [
+      eventFields.event_name,
+      eventFields.start_date,
+      eventFields.end_date,
+      eventFields.description,
+      eventFields.type,
+      eventFields.status,
+      eventFields.image,
+    ];
+
+    // Execute the query to insert the new event
+    db.query(insertQuery, queryParams, (err, result) => {
+      if (err) {
+        console.error("Insert error:", err);
+        return res.status(500).json({ error: "Something went wrong." });
+      }
+
+      res.status(200).json({
+        message: "Event created successfully.",
+        eventData: {
+          id: result.insertId, // Assuming the event has an auto-incrementing id
+          ...eventFields,
+        },
+      });
+    });
+  }
+);
 
 module.exports = router;

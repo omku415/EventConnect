@@ -23,7 +23,8 @@ import ResetPassword from "./Component/ForgotPassword/ResetPassword.jsx";
 import AdminDashboard from "./Component/AdminDashboard/AdminDashboard.jsx";
 import ProtectedRoute from "./Component/ProtecetedRoutes/profileProtectedRoutes.jsx";
 import PendingManagers from "./Component/PendingManager/pendingManager.jsx";
-import ManagerDashboard from "./Component/ManagerDashboard/ManagerDashboard.jsx"
+import ManagerDashboard from "./Component/ManagerDashboard/ManagerDashboard.jsx";
+import CreateEvent from "./Component/CreateEvents/CreateEvent.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
       <Route path="/admin-dashboard" element={<AdminDashboard />} />
       <Route path="/pending-managers" element={<PendingManagers />} />
       <Route path="manager-dashboard" element={<ManagerDashboard />} />
+      <Route path="create-events" element={<CreateEvent />} />
     </Route>
   )
 );
@@ -56,6 +58,6 @@ createRoot(document.getElementById("root")).render(
     {" "}
     {/*store setup*/}
     <RouterProvider router={router} />
-    <Toast/>
+    <Toast />
   </Provider>
 );
