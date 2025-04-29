@@ -47,6 +47,8 @@ function CreateEvent() {
     if (formData.type) {
       data.append("type", formData.type);
     }
+    data.append("status", "Pending");
+
 
     try {
       const token = localStorage.getItem("token");

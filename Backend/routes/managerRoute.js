@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 const uploadResume = require("../Cloudinary/uploadResume");
 const uploadEvents = require("../Cloudinary/uploadEvents");
 const jwt = require("jsonwebtoken");
-const authenticateToken = require('../authenticateToken');
+const authenticateToken = require("../authenticateToken");
 require("dotenv").config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
@@ -165,5 +165,27 @@ router.post(
     });
   }
 );
+
+//
+
+// Example route to fetch events for a specific manager
+router.get("/events/:managerId", authenticateToken, (req, res) => {
+  const managerId = req.params.managerId;
+
+  // Using callback style for the query
+  db.query(
+    "SELECT * FROM events WHERE manager_id = ?",
+    [managerId],
+    (error, results) => {
+      if (error) {
+        return res
+          .status(500)
+          .json({ message: "Error fetching events", error });
+      }
+
+      res.json(results); // Send the events as a JSON response
+    }
+  );
+});
 
 module.exports = router;

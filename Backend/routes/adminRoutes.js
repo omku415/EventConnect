@@ -6,8 +6,12 @@ const jwtSecretKey = process.env.JWT_SECRET_KEY;
 const db = require("../config/db");
 const router = express.Router();
 const sendVerificationEmail = require("../sendEmail/sendVerificationEmail");
-const authenticateToken = require('../authenticateToken');
-const sendRejectionEmail=require("../sendEmail/sendRejectionEmail")
+const authenticateToken = require("../authenticateToken");
+const sendRejectionEmail = require("../sendEmail/sendRejectionEmail");
+const {
+  sendEventApprovalEmail,
+  sendEventRejectionEmail,
+} = require("../sendEmail/sendEventEmail");
 
 router.post("/login", (req, res) => {
   const { email, password } = req.body;
@@ -52,7 +56,7 @@ router.post("/login", (req, res) => {
   });
 });
 
-router.get("/pending-managers",authenticateToken, (req, res) => {
+router.get("/pending-managers", authenticateToken, (req, res) => {
   // Query to fetch managers who are pending approval (isVerified = false)
   const query = "SELECT * FROM managers WHERE is_verified = false";
 
@@ -89,7 +93,6 @@ router.post("/approve-manager/:managerId", (req, res) => {
         .json({ message: "Failed to update manager verification status" });
     }
 
-    
     // Step 2: Fetch the manager's email
     const selectQuery = "SELECT email FROM managers WHERE id = ?";
     db.query(selectQuery, [managerId], (selectErr, selectResult) => {
@@ -113,7 +116,6 @@ router.post("/approve-manager/:managerId", (req, res) => {
     });
   });
 });
-
 
 router.post("/reject-manager/:managerId", (req, res) => {
   const managerId = req.params.managerId;
@@ -151,7 +153,8 @@ router.post("/reject-manager/:managerId", (req, res) => {
   });
 });
 router.get("/verify-events", authenticateToken, (req, res) => {
-  const query = "SELECT * FROM events ORDER BY created_at DESC";
+  const query =
+    "SELECT * FROM events WHERE status = 'Pending' ORDER BY created_at DESC";
 
   db.query(query, (err, results) => {
     if (err) {
@@ -163,5 +166,87 @@ router.get("/verify-events", authenticateToken, (req, res) => {
   });
 });
 
+router.put("/update-event-status/:id", authenticateToken, (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
+  // Validate the status value
+  if (!["Approved", "Rejected"].includes(status)) {
+    return res.status(400).json({ message: "Invalid status" });
+  }
+
+  // Query to update the event status
+  db.query(
+    "UPDATE events SET status = ? WHERE id = ?",
+    [status, id],
+    async (error, result) => {
+      if (error) {
+        return res
+          .status(500)
+          .json({ message: "Error updating event status", error });
+      }
+
+      if (result.affectedRows === 0) {
+        return res.status(404).json({ message: "Event not found" });
+      }
+
+      // Fetch the manager_id from the events table
+      db.query(
+        "SELECT manager_id FROM events WHERE id = ?",
+        [id],
+        (err, result) => {
+          if (err) {
+            return res
+              .status(500)
+              .json({ message: "Error fetching manager ID", err });
+          }
+
+          if (result.length === 0) {
+            return res.status(404).json({ message: "Event not found" });
+          }
+
+          const managerId = result[0].manager_id;
+
+          // Fetch the manager's email using manager_id
+          db.query(
+            "SELECT email FROM managers WHERE id = ?",
+            [managerId],
+            async (err, managerResult) => {
+              if (err) {
+                return res
+                  .status(500)
+                  .json({ message: "Error fetching manager email", err });
+              }
+
+              if (managerResult.length === 0) {
+                return res.status(404).json({ message: "Manager not found" });
+              }
+
+              const managerEmail = managerResult[0].email;
+
+              // Send email based on the status
+              try {
+                if (status === "Approved") {
+                  await sendEventApprovalEmail(managerEmail);
+                } else if (status === "Rejected") {
+                  await sendEventRejectionEmail(managerEmail);
+                }
+
+                // Respond back to the client
+                res.json({
+                  message: `Event ${status.toLowerCase()} successfully`,
+                });
+              } catch (error) {
+                return res
+                  .status(500)
+                  .json({ message: "Error sending email", error });
+              }
+            }
+          );
+        }
+      );
+    }
+  );
+});
 
 module.exports = router;

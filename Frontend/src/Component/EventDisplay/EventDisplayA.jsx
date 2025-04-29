@@ -25,6 +25,26 @@ function EventDisplayA() {
     fetchEvents();
   }, []);
 
+  const handleStatusChange = async (id, newStatus) => {
+    try {
+      const token = localStorage.getItem("token");
+      await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/update-event-status/${id}`,
+        { status: newStatus },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+  
+      // Update UI after change
+      setEvents((prevEvents) => prevEvents.filter((event) => event.id !== id));
+    } catch (error) {
+      console.error(`Error updating event status:`, error);
+    }
+  };
+  
   return (
     <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6 px-4 py-6">
       {events.length === 0 ? (
@@ -74,8 +94,18 @@ function EventDisplayA() {
               </div>
 
               <div className="card-actions justify-start mt-4 gap-3">
-                <button className="btn btn-success btn-sm w-32">Approve</button>
-                <button className="btn btn-error btn-sm w-32">Reject</button>
+                <button
+                  className="btn btn-success btn-sm w-32"
+                  onClick={() => handleStatusChange(event.id, "Approved")}
+                >
+                  Approve
+                </button>
+                <button
+                  className="btn btn-error btn-sm w-32"
+                  onClick={() => handleStatusChange(event.id, "Rejected")}
+                >
+                  Reject
+                </button>
               </div>
             </div>
           </div>
