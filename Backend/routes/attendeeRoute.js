@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const authenticateToken = require('../authenticateToken');
+const authenticateToken = require("../authenticateToken");
 //for  cloud
 const upload = require("../Cloudinary/upload");
 const cloudinary = require("../Cloudinary/cloudinary");
@@ -87,7 +87,7 @@ router.post("/login", (req, res) => {
 //update profile
 router.post(
   "/update-profile/:id",
-  authenticateToken, 
+  authenticateToken,
   upload.single("profile_image"),
   (req, res) => {
     const attendeeId = req.params.id;
@@ -147,5 +147,42 @@ router.post(
     });
   }
 );
+// Route to fetch only approved events for attendees
+router.get("/events/approved", authenticateToken, (req, res) => {
+  const query = "SELECT * FROM events WHERE status = 'Approved'";
+
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "Server error" });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+router.post("/join-event", authenticateToken, (req, res) => {
+  const attendeeId = req.user.userId;
+  const { eventId } = req.body;
+
+  if (!eventId) {
+    return res.status(400).json({ message: "Event ID is required" });
+  }
+
+  const query = `
+    INSERT INTO event_attendees (event_id, attendee_id)
+    VALUES (?, ?)
+    ON DUPLICATE KEY UPDATE joined_at = NOW()
+  `;
+
+  db.query(query, [eventId, attendeeId], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "Server error" });
+    }
+
+    res.status(200).json({ message: "Successfully joined the event" });
+  });
+});
 
 module.exports = router;

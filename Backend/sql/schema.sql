@@ -43,3 +43,12 @@ CREATE TABLE IF NOT EXISTS events (
     CONSTRAINT fk_manager FOREIGN KEY (manager_id)
         REFERENCES managers(id) ON DELETE CASCADE
 );
+CREATE TABLE IF NOT EXISTS event_attendees (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  event_id INT NOT NULL,
+  attendee_id INT NOT NULL,
+  joined_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT fk_event FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
+  CONSTRAINT fk_attendee FOREIGN KEY (attendee_id) REFERENCES attendees(id) ON DELETE CASCADE,
+  UNIQUE (event_id, attendee_id) -- to prevent duplicate joins
+);
