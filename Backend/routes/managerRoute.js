@@ -187,5 +187,24 @@ router.get("/events/:managerId", authenticateToken, (req, res) => {
     }
   );
 });
+// Get participants for a specific event
+router.get("/view-participants/:eventId", authenticateToken, (req, res) => {
+  const eventId = req.params.eventId;
 
+  const query = `
+    SELECT a.id, a.name, a.email,a.profile_image,a.phone
+    FROM event_attendees ea
+    JOIN attendees a ON ea.attendee_id = a.id
+    WHERE ea.event_id = ?
+  `;
+
+  db.query(query, [eventId], (err, results) => {
+    if (err) {
+      console.error("Error fetching participants:", err);
+      return res.status(500).json({ message: "Server error" });
+    }
+
+    res.status(200).json(results);
+  });
+});
 module.exports = router;

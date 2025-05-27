@@ -26,7 +26,7 @@ import PendingManagers from "./Component/PendingManager/pendingManager.jsx";
 import ManagerDashboard from "./Component/ManagerDashboard/ManagerDashboard.jsx";
 import CreateEvent from "./Component/CreateEvents/CreateEvent.jsx";
 import EventDisplayA from "./Component/EventDisplay/EventDisplayA.jsx";
-
+import ViewParticipants from "./Component/ViewParticipant/ViewParticipants.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
@@ -51,6 +51,10 @@ const router = createBrowserRouter(
       <Route path="manager-dashboard" element={<ManagerDashboard />} />
       <Route path="/create-events" element={<CreateEvent />} />
       <Route path="/verify-events" element={<EventDisplayA />} />
+      <Route
+        path="view-participant/:eventId"
+        element={<ViewParticipants />}
+      />
     </Route>
   )
 );

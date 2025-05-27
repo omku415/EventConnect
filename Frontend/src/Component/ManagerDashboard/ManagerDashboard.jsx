@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux"; // Correct import
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 function ManagerDashboard() {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]); // State to hold the events
   // Fetch events when the component mounts
   const { manager } = useSelector((state) => state.auth); // Access manager data from Redux
 
+  const handleViewParticipants = (eventId) => {
+    navigate(`/view-participant/${eventId}`);
+  };
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -25,8 +30,7 @@ function ManagerDashboard() {
         console.error("Error fetching events:", error);
       }
     };
-      fetchEvents(); // Fetch events only if manager and token exist
-    
+    fetchEvents(); // Fetch events only if manager and token exist
   }, [manager]); // Re-fetch events if manager or token changes
 
   return (
@@ -41,6 +45,12 @@ function ManagerDashboard() {
               <p>{event.description}</p>
               <div className="card-actions justify-end">
                 <button className="btn btn-primary">View Event</button>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => handleViewParticipants(event.id)}
+                >
+                  View Participants
+                </button>
               </div>
             </div>
             <figure>

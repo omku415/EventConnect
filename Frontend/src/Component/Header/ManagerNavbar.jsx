@@ -3,10 +3,12 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../Redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function ManagerNavbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const EventId = useSelector((state) => state.event.selectedEventId);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -43,7 +45,7 @@ function ManagerNavbar() {
               <Link to="/create-events">Create Event</Link>
             </li>
             <li>
-              <Link to="/view-participant">View Participant</Link>
+              <Link to={`/view-participant/${EventId}`}>View Participant</Link>
             </li>
             <li>
               <Link to="/view-feedback">View FeedBack</Link>
@@ -60,9 +62,13 @@ function ManagerNavbar() {
         <Link to="/create-events" className="btn btn-ghost text-lg">
           Create Events
         </Link>
-        <Link to="/view-participant" className="btn btn-ghost text-lg">
+        <Link
+          to={`/view-participant/${EventId}`}
+          className="btn btn-ghost text-lg"
+        >
           View Participant
         </Link>
+
         <Link to="/view-feedback" className="btn btn-ghost text-lg">
           View Feedback
         </Link>
