@@ -185,4 +185,23 @@ router.post("/join-event", authenticateToken, (req, res) => {
   });
 });
 
+router.get("/events/joined", authenticateToken, (req, res) => {
+  const attendeeId = req.user.userId;
+
+  const query = `
+    SELECT events.*
+    FROM events
+    JOIN event_attendees ON events.id = event_attendees.event_id
+    WHERE event_attendees.attendee_id = ?
+  `;
+
+  db.query(query, [attendeeId], (err, results) => {
+    if (err) {
+      console.error("Error fetching joined events:", err);
+      return res.status(500).json({ message: "Failed to fetch joined events" });
+    }
+
+    res.status(200).json(results);
+  });
+});
 module.exports = router;

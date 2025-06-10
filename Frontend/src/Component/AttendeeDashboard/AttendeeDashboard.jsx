@@ -22,6 +22,34 @@ function AttendeeDashboard() {
         console.error("Error fetching approved events:", error);
       }
     };
+    const fetchEventsAndJoined = async () => {
+      try {
+        const token = localStorage.getItem("token");
+
+        // Fetch approved events
+        const eventsRes = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/attendees/events/approved`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setEvents(eventsRes.data);
+
+        // Fetch joined events
+        const joinedRes = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/attendees/events/joined`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        const joinedIds = joinedRes.data.map((event) => event.id);
+        setJoinedEvents(joinedIds);
+      } catch (error) {
+        console.error("Error fetching events or joined events:", error);
+      }
+    };
+
+    fetchEventsAndJoined();
 
     fetchApprovedEvents();
   }, []);
@@ -79,18 +107,17 @@ function AttendeeDashboard() {
                 )}
 
                 <div className="flex justify-between items-center mt-4 gap-2">
-                  {!hasJoined ? (
-                    <button
-                      className="btn btn-primary"
-                      onClick={() => handleJoin(event.id)}
-                    >
-                      Join Event
-                    </button>
-                  ) : (
-                    <button className="btn btn-success btn-disabled">
-                      Joined ✅
-                    </button>
-                  )}
+                  <button
+                    className="btn btn-primary"
+                    onClick={() => handleJoin(event.id)}
+                    disabled={hasJoined || eventEnded}
+                  >
+                    {hasJoined
+                      ? "Joined ✅"
+                      : eventEnded
+                      ? "Event Over"
+                      : "Join Event"}
+                  </button>
 
                   {hasJoined && eventEnded && (
                     <button
