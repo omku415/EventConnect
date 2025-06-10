@@ -1,32 +1,23 @@
 import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import Feedback from "../Feedback/Feedback"; 
+import {
+  setSelectedEventId,
+  clearSelectedEventId,
+} from "../../Redux/eventSlice";
 
 function AttendeeDashboard() {
   const [events, setEvents] = useState([]);
   const [joinedEvents, setJoinedEvents] = useState([]);
+  const selectedEventId = useSelector((state) => state.event.selectedEventId);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const fetchApprovedEvents = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/attendees/events/approved`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setEvents(response.data);
-      } catch (error) {
-        console.error("Error fetching approved events:", error);
-      }
-    };
     const fetchEventsAndJoined = async () => {
       try {
         const token = localStorage.getItem("token");
 
-        // Fetch approved events
         const eventsRes = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/attendees/events/approved`,
           {
@@ -35,7 +26,6 @@ function AttendeeDashboard() {
         );
         setEvents(eventsRes.data);
 
-        // Fetch joined events
         const joinedRes = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/attendees/events/joined`,
           {
@@ -50,8 +40,6 @@ function AttendeeDashboard() {
     };
 
     fetchEventsAndJoined();
-
-    fetchApprovedEvents();
   }, []);
 
   const handleJoin = async (eventId) => {
@@ -66,12 +54,16 @@ function AttendeeDashboard() {
           },
         }
       );
-
       setJoinedEvents((prev) => [...prev, eventId]);
     } catch (error) {
       console.error("Error joining event:", error);
       alert("Failed to join event. Please try again.");
     }
+  };
+
+  const handleFeedbackSubmit = (data) => {
+    console.log("Submitting feedback:", data);
+    dispatch(clearSelectedEventId());
   };
 
   return (
@@ -122,12 +114,24 @@ function AttendeeDashboard() {
                   {hasJoined && eventEnded && (
                     <button
                       className="btn btn-outline btn-secondary"
-                      onClick={() => openFeedbackModal(event.id)}
+                      onClick={() =>
+                        dispatch(
+                          selectedEventId === event.id
+                            ? clearSelectedEventId()
+                            : setSelectedEventId(event.id)
+                        )
+                      }
                     >
-                      Give Feedback
+                      {selectedEventId === event.id
+                        ? "Cancel"
+                        : "Give Feedback"}
                     </button>
                   )}
                 </div>
+
+                {selectedEventId === event.id && (
+                  <Feedback onSubmit={handleFeedbackSubmit} />
+                )}
 
                 <div className="card-actions justify-end">
                   <button className="btn btn-link">View Event</button>
@@ -140,4 +144,5 @@ function AttendeeDashboard() {
     </div>
   );
 }
+
 export default AttendeeDashboard;
