@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import Feedback from "../Feedback/Feedback"; 
+import Feedback from "../Feedback/Feedback";
 import {
   setSelectedEventId,
   clearSelectedEventId,
@@ -61,9 +61,29 @@ function AttendeeDashboard() {
     }
   };
 
-  const handleFeedbackSubmit = (data) => {
-    console.log("Submitting feedback:", data);
-    dispatch(clearSelectedEventId());
+  const handleFeedbackSubmit = async (feedbackData) => {
+    const token = localStorage.getItem("token");
+
+    try {
+      await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/attendees/feedback`,
+        {
+          ...feedbackData,
+          eventId: selectedEventId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      alert("Feedback submitted successfully!");
+      dispatch(clearSelectedEventId());
+    } catch (error) {
+      console.error("Error submitting feedback:", error);
+      alert("Failed to submit feedback.");
+    }
   };
 
   return (

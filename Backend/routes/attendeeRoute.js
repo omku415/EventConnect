@@ -204,4 +204,28 @@ router.get("/events/joined", authenticateToken, (req, res) => {
     res.status(200).json(results);
   });
 });
+
+
+router.post("/feedback", authenticateToken, (req, res) => {
+  const attendeeId = req.user.userId; // From JWT
+  const { rating, text, eventId } = req.body;
+
+  if (!eventId || !rating) {
+    return res.status(400).json({ message: "Event ID and rating are required" });
+  }
+
+  const query = `
+    INSERT INTO feedback (event_id, attendee_id, rating, text)
+    VALUES (?, ?, ?, ?)
+  `;
+
+  db.query(query, [eventId, attendeeId, rating, text], (err, results) => {
+    if (err) {
+      console.error("Database error:", err);
+      return res.status(500).json({ message: "Server error" });
+    }
+
+    res.status(201).json({ message: "Feedback submitted successfully" });
+  });
+});
 module.exports = router;

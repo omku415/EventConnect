@@ -52,3 +52,12 @@ CREATE TABLE IF NOT EXISTS event_attendees (
   CONSTRAINT fk_attendee FOREIGN KEY (attendee_id) REFERENCES attendees(id) ON DELETE CASCADE,
   UNIQUE (event_id, attendee_id) -- to prevent duplicate joins
 );
+
+CREATE TABLE feedback (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  rating INT NOT NULL,
+  text TEXT,
+  event_id INT NOT NULL,
+  submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (event_id) REFERENCES events(id)
+);
