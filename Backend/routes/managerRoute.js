@@ -207,4 +207,32 @@ router.get("/view-participants/:eventId", authenticateToken, (req, res) => {
     res.status(200).json(results);
   });
 });
+
+router.get("/view-feedback/:managerId", authenticateToken, (req, res) => {
+  const managerId = req.params.managerId;
+
+  const query = `
+    SELECT 
+      f.rating, 
+      f.text, 
+      f.submitted_at, 
+      a.name AS attendeeName, 
+      a.profile_image AS attendeeImage
+    FROM feedback f
+    JOIN events e ON f.event_id = e.id
+    LEFT JOIN attendees a ON f.attendee_id = a.id
+    WHERE e.manager_id = ?
+    ORDER BY f.submitted_at DESC
+  `;
+
+  db.query(query, [managerId], (err, results) => {
+    if (err) {
+      console.error("Error fetching feedback:", err);
+      return res.status(500).json({ message: "Server error" });
+    }
+
+    res.status(200).json(results);
+  });
+});
+
 module.exports = router;

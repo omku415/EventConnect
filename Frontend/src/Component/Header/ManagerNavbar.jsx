@@ -1,14 +1,17 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../Redux/authSlice";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 function ManagerNavbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const EventId = useSelector((state) => state.event.selectedEventId);
+
+  // Assuming manager is stored in localStorage
+  const manager = JSON.parse(localStorage.getItem("manager"));
+  const managerId = manager?.id;
 
   const handleLogout = () => {
     dispatch(logout());
@@ -48,7 +51,7 @@ function ManagerNavbar() {
               <Link to={`/view-participant/${EventId}`}>View Participant</Link>
             </li>
             <li>
-              <Link to="/view-feedback">View FeedBack</Link>
+              <Link to={`/view-feedback/${managerId}`}>View Feedback</Link>
             </li>
           </ul>
         </div>
@@ -62,14 +65,10 @@ function ManagerNavbar() {
         <Link to="/create-events" className="btn btn-ghost text-lg">
           Create Events
         </Link>
-        <Link
-          to={`/view-participant/${EventId}`}
-          className="btn btn-ghost text-lg"
-        >
+        <Link to={`/view-participant/${EventId}`} className="btn btn-ghost text-lg">
           View Participant
         </Link>
-
-        <Link to="/view-feedback" className="btn btn-ghost text-lg">
+        <Link to={`/view-feedback/${managerId}`} className="btn btn-ghost text-lg">
           View Feedback
         </Link>
       </div>

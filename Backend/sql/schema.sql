@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS managers (
     resume_url TEXT,
     is_verified BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    asswordResetToken VARCHAR(255),
+    passwordResetToken VARCHAR(255),
     passwordResetTokenExpiration BIGINT;
 );
 
@@ -53,11 +53,13 @@ CREATE TABLE IF NOT EXISTS event_attendees (
   UNIQUE (event_id, attendee_id) -- to prevent duplicate joins
 );
 
-CREATE TABLE feedback (
+CREATE TABLE IF NOT EXISTS feedback (
   id INT PRIMARY KEY AUTO_INCREMENT,
   rating INT NOT NULL,
   text TEXT,
   event_id INT NOT NULL,
+  attendee_id INT,
   submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (event_id) REFERENCES events(id)
+  FOREIGN KEY (event_id) REFERENCES events(id),
+  CONSTRAINT fk_feedback_attendee FOREIGN KEY (attendee_id) REFERENCES attendees(id)
 );
