@@ -1,36 +1,54 @@
-Event Connect is a platform that bridges the gap between event organizers and attendees. It enables attendees to discover and register for events, allows managers to create and manage events, and empowers admins to oversee and control the entire system for smooth operations.
+# 🎉 Event Connect
 
-Features
-🧑‍🤝‍🧑 Attendees:
-Register, log in, and browse a wide range of events.
+**Event Connect** is a full-stack platform that bridges the gap between event organizers and attendees. Attendees can discover and register for events, managers can create and manage their events, and admins oversee the system for smooth and secure operations.
 
-Join approved events and provide feedback after participation.
+🔗 [GitHub Repository](https://github.com/omku415/EventConnect)
 
-🧑‍💼 Managers:
-Register and upload a resume for admin approval.
+---
 
-Once approved, create, manage, and publish events.
+## 📚 Table of Contents
 
-View participants and their feedback for each event.
+- [Features](#features)
+- [Tech Stack](#tech-stack)
 
-👨‍💻 Admins:
-Review and approve manager applications.
 
-Approve or reject events before they appear to attendees.
+---
 
-Manage platform users, including the ability to delete users.
+## 🚀 Features
 
-Tech Stack
-Frontend: React
+### 🧑‍🤝‍🧑 Attendees
+- Register, log in, and browse events  
+- Join **approved** events  
+- Provide feedback after attending  
 
-Backend: Node.js with Express
+### 🧑‍💼 Managers
+- Register and upload resume for **admin approval**  
+- Create, manage, and publish events  
+- View participants and feedback  
 
-Database: SQL
+### 👨‍💻 Admins
+- Review and approve **manager applications**  
+- Approve or reject events  
+- Manage users (including **deleting users**)
 
-Authentication: JWT (JSON Web Token)
+---
 
-State Management: Redux
+## 🛠️ Tech Stack
 
-Email Service: SendGrid (for password resets and notifications)
+- **Frontend**: React  
+- **Backend**: Node.js with Express  
+- **Database**: SQL  
+- **Authentication**: JWT (JSON Web Token)  
+- **Email Service**: SendGrid  
+- **State Management**: Redux  
+- **Image Hosting**: Cloudinary  
 
-Image Hosting: Cloudinary
+---
+
+## 🧑‍💻 Installation
+
+1. Clone the repository  
+   ```bash
+   git clone https://github.com/omku415/EventConnect.git
+
+
