@@ -1,36 +1,36 @@
-# Event Connect
-Event Connect is a platform that bridges the gap between event organizers and attendees. It allows users to discover, register, and attend events, while managers can create, manage, and oversee their events. Admins have the power to approve managers and maintain the overall system, ensuring everything runs smoothly.
+Event Connect is a platform that bridges the gap between event organizers and attendees. It enables attendees to discover and register for events, allows managers to create and manage events, and empowers admins to oversee and control the entire system for smooth operations.
 
-## Features
+Features
+🧑‍🤝‍🧑 Attendees:
+Register, log in, and browse a wide range of events.
 
-### Attendees:
+Join approved events and provide feedback after participation.
 
--Register, log in, and browse a wide range of events.
-<br>
--Join events and provide feedback after attendance.
+🧑‍💼 Managers:
+Register and upload a resume for admin approval.
 
-### Managers:
+Once approved, create, manage, and publish events.
 
--Register and upload a resume for admin approval.
-<br>
--Once approved, manage and post events.
-<br>
--View attendees for their events.
+View participants and their feedback for each event.
 
-### Admins:
+👨‍💻 Admins:
+Review and approve manager applications.
 
--Review manager applications and approve them.
-<br>
--Oversee the entire platform and manage user roles.
+Approve or reject events before they appear to attendees.
 
-### Tech Stack
+Manage platform users, including the ability to delete users.
 
+Tech Stack
 Frontend: React
-<br>
--Backend: Node.js with Express
-<br>
--Database: SQL
-<br>
--State Management: Redux 
-<br>
--Image Hosting: Cloudinary
+
+Backend: Node.js with Express
+
+Database: SQL
+
+Authentication: JWT (JSON Web Token)
+
+State Management: Redux
+
+Email Service: SendGrid (for password resets and notifications)
+
+Image Hosting: Cloudinary
