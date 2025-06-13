@@ -249,4 +249,38 @@ router.put("/update-event-status/:id", authenticateToken, (req, res) => {
   );
 });
 
+// routes/adminRoutes.js
+router.get("/all-attendees", (req, res) => {
+  db.query("SELECT id, name, email FROM attendees", (err, results) => {
+    if (err) {
+      console.error("Error fetching attendees:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+    res.json(results);
+  });
+});
+router.get("/all-managers", (req, res) => {
+  db.query("SELECT id, name, email FROM managers", (err, results) => {
+    if (err) {
+      console.error("Error fetching managers:", err);
+      return res.status(500).json({ error: "Internal server error" });
+    }
+    res.json(results);
+  });
+});
+router.delete("/delete-attendee/:id", authenticateToken, (req, res) => {
+  const { id } = req.params;
+  db.query("DELETE FROM attendees WHERE id = ?", [id], (err, result) => {
+    if (err) return res.status(500).json({ error: "Server error" });
+    res.json({ message: "Attendee deleted" });
+  });
+});
+
+router.delete("/delete-manager/:id", authenticateToken, (req, res) => {
+  const { id } = req.params;
+  db.query("DELETE FROM managers WHERE id = ?", [id], (err, result) => {
+    if (err) return res.status(500).json({ error: "Server error" });
+    res.json({ message: "Manager deleted" });
+  });
+});
 module.exports = router;

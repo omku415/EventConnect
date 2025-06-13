@@ -29,6 +29,7 @@ import EventDisplayA from "./Component/EventDisplay/EventDisplayA.jsx";
 import ViewParticipants from "./Component/ViewParticipant/ViewParticipants.jsx";
 import ManagerFeedbackList from "./Component/ShowFeedback/viewFeedback.jsx";
 import ViewFeedback from "./Component/ShowFeedback/viewFeedback.jsx";
+import AdminUserManagement from "./Component/ManageUser/AdminUserManagement.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
@@ -54,7 +55,7 @@ const router = createBrowserRouter(
       <Route path="/create-events" element={<CreateEvent />} />
       <Route path="/verify-events" element={<EventDisplayA />} />
       <Route path="/view-feedback/:managerId" element={<ViewFeedback />} />
-
+      <Route path="/manage-user" element={<AdminUserManagement />} />
       <Route path="view-participant/:eventId" element={<ViewParticipants />} />
     </Route>
   )
