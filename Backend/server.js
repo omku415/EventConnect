@@ -7,7 +7,12 @@ app.use(express.json());
 
 const db = require("./config/db");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://eventconnect1.netlify.app",
+    credentials: true,
+  })
+);
 
 //attendee routes
 const attendeeRoutes = require("./routes/attendeeRoute");
@@ -20,8 +25,8 @@ app.use("/", passwordResetRoutes);
 const adminRoutes = require("./routes/adminRoutes");
 app.use("/admin", adminRoutes);
 
-const managerRoutes=require("./routes/managerRoute");
-app.use("/managers",managerRoutes)
+const managerRoutes = require("./routes/managerRoute");
+app.use("/managers", managerRoutes);
 
 // Sample route
 app.get("/", (req, res) => {
