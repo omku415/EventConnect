@@ -2,9 +2,10 @@ import React from "react";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useSelector } from "react-redux";
 function CreateEvent() {
+  const managerId = useSelector((state) => state.auth.manager?.id);
   const today = new Date().toISOString().split("T")[0];
-  const managerId = localStorage.getItem("id");
   const [formData, setFormData] = useState({
     event_name: "",
     image: null,
@@ -28,9 +29,12 @@ function CreateEvent() {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!managerId) {
+      toast.error("Manager ID not found. Please log in again.");
+      return;
+    }
 
     const data = new FormData();
-    const managerId = localStorage.getItem("managerId"); // Get manager ID
 
     if (formData.event_name) data.append("event_name", formData.event_name);
     if (formData.image) data.append("image", formData.image);
@@ -39,7 +43,7 @@ function CreateEvent() {
     if (formData.description) data.append("description", formData.description);
     if (formData.type) data.append("type", formData.type);
     data.append("status", "Pending");
-    data.append("manager_id", managerId); // ✅ This is critical
+    data.append("manager_id", managerId); // ✅ Now valid integer
 
     try {
       const token = localStorage.getItem("token");
