@@ -6,7 +6,7 @@ const sendRejectionEmail = (managerEmail) => {
 
   const msg = {
     to: managerEmail, // Manager's email
-    from: process.env.EMAIL_USER, // Your verified SendGrid email
+    from: process.env.SENDGRID_SENDER_EMAIL, // Your verified SendGrid email
     subject: "Manager Registration Status Update",
     text: `Dear Applicant,
   

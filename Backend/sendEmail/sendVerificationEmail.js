@@ -6,7 +6,7 @@ const sendVerificationEmail = (managerEmail) => {
 
   const msg = {
     to: managerEmail,  // Manager's email
-    from: process.env.EMAIL_USER,  // Your verified SendGrid email
+    from: process.env.SENDGRID_SENDER_EMAIL,  // Your verified SendGrid email
     subject: "Manager Registration Verified",
     text: "Your registration has been successfully verified by the admin. You can now log in to your account.",
   };

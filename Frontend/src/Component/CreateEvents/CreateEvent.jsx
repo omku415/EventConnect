@@ -4,6 +4,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 function CreateEvent() {
   const today = new Date().toISOString().split("T")[0];
+  const managerId = localStorage.getItem("id");
   const [formData, setFormData] = useState({
     event_name: "",
     image: null,
@@ -29,26 +30,16 @@ function CreateEvent() {
     e.preventDefault();
 
     const data = new FormData();
-    if (formData.event_name) {
-      data.append("event_name", formData.event_name);
-    }
-    if (formData.image) {
-      data.append("image", formData.image);
-    }
-    if (formData.start_date) {
-      data.append("start_date", formData.start_date);
-    }
-    if (formData.end_date) {
-      data.append("end_date", formData.end_date);
-    }
-    if (formData.description) {
-      data.append("description", formData.description);
-    }
-    if (formData.type) {
-      data.append("type", formData.type);
-    }
-    data.append("status", "Pending");
+    const managerId = localStorage.getItem("managerId"); // Get manager ID
 
+    if (formData.event_name) data.append("event_name", formData.event_name);
+    if (formData.image) data.append("image", formData.image);
+    if (formData.start_date) data.append("start_date", formData.start_date);
+    if (formData.end_date) data.append("end_date", formData.end_date);
+    if (formData.description) data.append("description", formData.description);
+    if (formData.type) data.append("type", formData.type);
+    data.append("status", "Pending");
+    data.append("manager_id", managerId); // ✅ This is critical
 
     try {
       const token = localStorage.getItem("token");
@@ -65,7 +56,6 @@ function CreateEvent() {
 
       toast.success("Event created successfully!");
 
-      // Optionally reset the form
       setFormData({
         event_name: "",
         image: null,
