@@ -177,9 +177,8 @@ router.post(
 router.get("/events/:managerId", authenticateToken, (req, res) => {
   const managerId = req.params.managerId;
 
-  // Using callback style for the query
   db.query(
-    "SELECT * FROM events WHERE manager_id = ?",
+    "SELECT * FROM events WHERE manager_id = ? AND status = 'Approved'",
     [managerId],
     (error, results) => {
       if (error) {
@@ -188,10 +187,11 @@ router.get("/events/:managerId", authenticateToken, (req, res) => {
           .json({ message: "Error fetching events", error });
       }
 
-      res.json(results); // Send the events as a JSON response
+      res.json(results);
     }
   );
 });
+
 // Get participants for a specific event
 router.get("/view-participants/:eventId", authenticateToken, (req, res) => {
   const eventId = req.params.eventId;

@@ -170,61 +170,60 @@ router.put("/update-event-status/:id", authenticateToken, (req, res) => {
   const { id } = req.params;
   const { status } = req.body;
 
-  // Validate the status value
   if (!["Approved", "Rejected"].includes(status)) {
     return res.status(400).json({ message: "Invalid status" });
   }
 
-  // Query to update the event status
+  // Step 1: Fetch manager_id before updating
   db.query(
-    "UPDATE events SET status = ? WHERE id = ?",
-    [status, id],
-    async (error, result) => {
-      if (error) {
+    "SELECT manager_id FROM events WHERE id = ?",
+    [id],
+    (err, result) => {
+      if (err) {
         return res
           .status(500)
-          .json({ message: "Error updating event status", error });
+          .json({ message: "Error fetching manager ID", err });
       }
 
-      if (result.affectedRows === 0) {
+      if (result.length === 0) {
         return res.status(404).json({ message: "Event not found" });
       }
 
-      // Fetch the manager_id from the events table
+      const managerId = result[0].manager_id;
+
+      // Step 2: Fetch manager's email
       db.query(
-        "SELECT manager_id FROM events WHERE id = ?",
-        [id],
-        (err, result) => {
+        "SELECT email FROM managers WHERE id = ?",
+        [managerId],
+        async (err, managerResult) => {
           if (err) {
             return res
               .status(500)
-              .json({ message: "Error fetching manager ID", err });
+              .json({ message: "Error fetching manager email", err });
           }
 
-          if (result.length === 0) {
-            return res.status(404).json({ message: "Event not found" });
+          if (managerResult.length === 0) {
+            return res.status(404).json({ message: "Manager not found" });
           }
 
-          const managerId = result[0].manager_id;
+          const managerEmail = managerResult[0].email;
 
-          // Fetch the manager's email using manager_id
+          // Step 3: Update status
           db.query(
-            "SELECT email FROM managers WHERE id = ?",
-            [managerId],
-            async (err, managerResult) => {
-              if (err) {
+            "UPDATE events SET status = ? WHERE id = ?",
+            [status, id],
+            async (error, result) => {
+              if (error) {
                 return res
                   .status(500)
-                  .json({ message: "Error fetching manager email", err });
+                  .json({ message: "Error updating event status", error });
               }
 
-              if (managerResult.length === 0) {
-                return res.status(404).json({ message: "Manager not found" });
+              if (result.affectedRows === 0) {
+                return res.status(404).json({ message: "Event not found" });
               }
 
-              const managerEmail = managerResult[0].email;
-
-              // Send email based on the status
+              // Step 4: Send email
               try {
                 if (status === "Approved") {
                   await sendEventApprovalEmail(managerEmail);
@@ -232,7 +231,6 @@ router.put("/update-event-status/:id", authenticateToken, (req, res) => {
                   await sendEventRejectionEmail(managerEmail);
                 }
 
-                // Respond back to the client
                 res.json({
                   message: `Event ${status.toLowerCase()} successfully`,
                 });
