@@ -40,6 +40,11 @@ router.post("/register", uploadResume.single("resume"), async (req, res) => {
       (err, result) => {
         if (err) {
           console.error("DB error:", err);
+
+          if (err.code === "ER_DUP_ENTRY") {
+            return res.status(409).json({ message: "Email already exists" });
+          }
+
           return res
             .status(500)
             .json({ message: "Manager registration failed" });

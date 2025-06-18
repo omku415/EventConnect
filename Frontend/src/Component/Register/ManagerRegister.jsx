@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 function ManagerRegister() {
-   const navigate = useNavigate()
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -37,7 +39,7 @@ function ManagerRegister() {
     formDataToSend.append("phone", formData.phone);
     formDataToSend.append("password", formData.password);
     formDataToSend.append("confirmPassword", formData.confirmPassword);
-    formDataToSend.append("resume", formData.resume);  
+    formDataToSend.append("resume", formData.resume);
 
     try {
       const res = await axios.post(
@@ -49,13 +51,16 @@ function ManagerRegister() {
           },
         }
       );
-      alert(res.data.message);
+      toast.success(res.data.message);
       navigate("/login");
     } catch (err) {
       console.error(err);
-      alert("Registration failed.");
+      if (err.response && err.response.status === 409) {
+        toast.error("Email already exists");
+      } else {
+        toast.error(err.response?.data?.message || "Registration failed.");
+      }
     }
-   
   };
 
   return (
