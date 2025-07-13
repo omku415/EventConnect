@@ -13,7 +13,7 @@ app.use(
     credentials: true,
   })
 );
-
+app.options("*", cors());
 //attendee routes
 const attendeeRoutes = require("./routes/attendeeRoute");
 app.use("/attendees", attendeeRoutes);
