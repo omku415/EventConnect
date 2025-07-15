@@ -22,21 +22,18 @@ router.post("/register", async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const query = `
-      INSERT INTO attendees (name, phone, email, password)
-      VALUES (?, ?, ?, ?)
-    `;
-    const [result] = await db.query(query, [
-      name,
-      phone,
-      email,
-      hashedPassword,
-    ]);
-
-    res.status(201).json({ message: "Attendee registered successfully" });
+    const query =
+      "INSERT INTO attendees (name, phone, email, password) VALUES (?, ?, ?, ?)";
+    db.query(query, [name, phone, email, hashedPassword], (err, result) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ message: "Registration failed" });
+      }
+      res.status(201).json({ message: "Attendee registered successfully" });
+    });
   } catch (err) {
-    console.error("Registration error:", err);
-    res.status(500).json({ message: "Registration failed" });
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
