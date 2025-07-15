@@ -1,29 +1,24 @@
 const mysql = require("mysql2");
-require("dotenv").config();
+require("dotenv").config(); // Load .env variables
+const url = require("url");
 
 const dbUrl = new URL(process.env.DATABASE_URL);
 
-const pool = mysql.createPool({
+const db = mysql.createConnection({
   host: dbUrl.hostname,
   user: dbUrl.username,
   password: dbUrl.password,
   database: dbUrl.pathname.replace("/", ""),
   port: dbUrl.port,
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  ssl: {
-    rejectUnauthorized: false  // ✅ bypass certificate validation
-  }
 });
 
-pool.query("SELECT 1", (err) => {
+// Connect to MySQL
+db.connect((err) => {
   if (err) {
-    console.error("❌ DB connection test failed:", err);
+    console.error("Database connection failed:", err);
   } else {
-    console.log("✅ DB connection successful");
+    console.log("Connected to MySQL Database");
   }
 });
 
-module.exports = pool.promise();
-
+module.exports = db;
