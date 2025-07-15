@@ -4,17 +4,17 @@ require("dotenv").config();
 const dbUrl = new URL(process.env.DATABASE_URL);
 
 const pool = mysql.createPool({
-  host: dbUrl.hostname,
-  user: dbUrl.username,
+  host: dbUrl.hostname,                     // maglev.proxy.rlwy.net
+  user: dbUrl.username,                     // root
   password: dbUrl.password,
-  database: dbUrl.pathname.replace("/", ""),
-  port: dbUrl.port,
+  database: dbUrl.pathname.replace("/", ""),// railway
+  port: dbUrl.port,                         // 26000
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
+  ssl: { rejectUnauthorized: true },        // ✅ may be required
 });
 
-// ✅ Test connection immediately
 pool.query("SELECT 1", (err) => {
   if (err) {
     console.error("❌ DB connection test failed:", err);
