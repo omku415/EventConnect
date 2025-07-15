@@ -4,15 +4,17 @@ require("dotenv").config();
 const dbUrl = new URL(process.env.DATABASE_URL);
 
 const pool = mysql.createPool({
-  host: dbUrl.hostname,                     // maglev.proxy.rlwy.net
-  user: dbUrl.username,                     // root
+  host: dbUrl.hostname,
+  user: dbUrl.username,
   password: dbUrl.password,
-  database: dbUrl.pathname.replace("/", ""),// railway
-  port: dbUrl.port,                         // 26000
+  database: dbUrl.pathname.replace("/", ""),
+  port: dbUrl.port,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
-  ssl: { rejectUnauthorized: true },        // ✅ may be required
+  ssl: {
+    rejectUnauthorized: false  // ✅ bypass certificate validation
+  }
 });
 
 pool.query("SELECT 1", (err) => {
@@ -24,3 +26,4 @@ pool.query("SELECT 1", (err) => {
 });
 
 module.exports = pool.promise();
+
