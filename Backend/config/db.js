@@ -1,5 +1,6 @@
 const mysql = require("mysql2");
-require("dotenv").config(); // Load .env variables
+require("dotenv").config();
+
 const dbUrl = new URL(process.env.DATABASE_URL);
 
 const pool = mysql.createPool({
@@ -13,6 +14,13 @@ const pool = mysql.createPool({
   queueLimit: 0,
 });
 
+// Test the connection immediately
+pool.query("SELECT 1", (err) => {
+  if (err) {
+    console.error("❌ DB connection failed:", err);
+  } else {
+    console.log("✅ DB connection successful");
+  }
+});
 
 module.exports = pool.promise();
-
