@@ -10,6 +10,9 @@ const db = mysql.createConnection({
   password: dbUrl.password,
   database: dbUrl.pathname.replace("/", ""),
   port: dbUrl.port,
+  ssl: {
+    rejectUnauthorized: true, // ✅ Required for TiDB TLS
+  },
 });
 
 // Connect to MySQL
@@ -22,3 +25,4 @@ db.connect((err) => {
 });
 
 module.exports = db;
+
