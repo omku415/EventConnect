@@ -158,19 +158,18 @@ router.post(
       eventFields.image,
       eventFields.manager_id, // ✅ Include in values
     ];
-
     db.query(insertQuery, queryParams, (err, result) => {
       if (err) {
-        console.error("Insert error:", err);
-        return res.status(500).json({ error: "Something went wrong." });
+        console.error("Insert error details:", err); // full error object in console
+        console.error("SQL Error Message:", err.sqlMessage); // readable MySQL message
+        return res
+          .status(500)
+          .json({ error: err.sqlMessage || "Something went wrong." });
       }
 
       res.status(200).json({
         message: "Event created successfully.",
-        eventData: {
-          id: result.insertId,
-          ...eventFields,
-        },
+        eventData: { id: result.insertId, ...eventFields },
       });
     });
   }
