@@ -11,7 +11,7 @@ const db = mysql.createConnection({
   database: dbUrl.pathname.replace("/", ""),
   port: dbUrl.port,
   ssl: {
-    rejectUnauthorized: true, // ✅ Required for TiDB TLS
+    rejectUnauthorized: true, 
   },
 });
 

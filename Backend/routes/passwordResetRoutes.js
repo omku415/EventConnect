@@ -4,12 +4,10 @@ const crypto = require("crypto");
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
-const sendPasswordResetEmail = require("../sendEmail/sendForgotPassword");
+const sendPasswordResetEmail = require("../sendEmail/sendForgotPassword"); // Nodemailer version
 
+const frontendUrl = process.env.APP_URL || process.env.FRONTEND_URL;
 // POST /forgot-password
-const sgMail = require("@sendgrid/mail"); // Import SendGrid
-sgMail.setApiKey(process.env.SENDGRID_API_KEY); // Set SendGrid API key
-
 router.post("/forgot-password", (req, res) => {
   const { email, userType } = req.body;
 
@@ -55,13 +53,13 @@ router.post("/forgot-password", (req, res) => {
           return res.status(500).json({ message: "Error saving reset token" });
         }
 
-        const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+        const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
         try {
-          await sendPasswordResetEmail(email, resetUrl);
+          await sendPasswordResetEmail(email, resetUrl); // Nodemailer handles sending
           return res.status(200).json({ message: "Password reset email sent" });
         } catch (error) {
-          console.error("SendGrid error:", error);
+          console.error("Email sending error:", error);
           return res.status(500).json({ message: "Error sending reset email" });
         }
       }
@@ -69,12 +67,12 @@ router.post("/forgot-password", (req, res) => {
   });
 });
 
-//
+// POST /reset-password/:token
 router.post("/reset-password/:token", (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
 
-  // Define a reusable function to check a table for the token
+  // Check a table for the token
   const checkTableForToken = (tableName, callback) => {
     const query = `SELECT * FROM ${tableName} WHERE passwordResetToken = ?`;
     db.query(query, [token], (err, results) => {
@@ -93,7 +91,6 @@ router.post("/reset-password/:token", (req, res) => {
 
     if (result) return handlePasswordReset(result);
 
-    // If not found in attendees, check managers
     checkTableForToken("managers", (err, result) => {
       if (err) {
         console.error("Database error:", err);

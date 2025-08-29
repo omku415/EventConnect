@@ -9,7 +9,7 @@ const db = require("./config/db");
 
 app.use(
   cors({
-    origin: "https://eventconnect1.netlify.app",
+    origin: ["https://eventconnect1.netlify.app", "http://localhost:5173"],
     credentials: true,
   })
 );
