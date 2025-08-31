@@ -10,7 +10,7 @@ require("dotenv").config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
-// Manager Registration Route
+
 router.post("/register", uploadResume.single("resume"), async (req, res) => {
   const { name, phone, email, password, confirmPassword } = req.body;
 
@@ -26,7 +26,6 @@ router.post("/register", uploadResume.single("resume"), async (req, res) => {
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const resumeUrl = req.file.path;
 
     const insertQuery = `
@@ -34,54 +33,42 @@ router.post("/register", uploadResume.single("resume"), async (req, res) => {
       VALUES (?, ?, ?, ?, ?, false)
     `;
 
-    db.query(
-      insertQuery,
-      [name, phone, email, hashedPassword, resumeUrl],
-      (err, result) => {
-        if (err) {
-          console.error("DB error:", err);
-
-          if (err.code === "ER_DUP_ENTRY") {
-            return res.status(409).json({ message: "Email already exists" });
-          }
-
-          return res
-            .status(500)
-            .json({ message: "Manager registration failed" });
-        }
-
-        res.status(201).json({
-          message: "Registration successful. Awaiting admin approval.",
-        });
+    try {
+      await db.query(insertQuery, [name, phone, email, hashedPassword, resumeUrl]);
+      res.status(201).json({
+        message: "Registration successful. Awaiting admin approval.",
+      });
+    } catch (err) {
+      console.error("DB error:", err);
+      if (err.code === "ER_DUP_ENTRY") {
+        return res.status(409).json({ message: "Email already exists" });
       }
-    );
+      return res.status(500).json({ message: "Manager registration failed" });
+    }
   } catch (err) {
     console.error("Server error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
 
+
 //Manager login
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
     return res.status(400).json({ message: "Please fill all fields" });
   }
 
-  const query = "SELECT * FROM managers WHERE email = ?";
-  db.query(query, [email], async (err, results) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ message: "Server error" });
-    }
+  try {
+    const query = "SELECT * FROM managers WHERE email = ?";
+    const [results] = await db.query(query, [email]);
 
     if (results.length === 0) {
       return res.status(401).json({ message: "Manager not found" });
     }
 
     const manager = results[0];
-
     const isMatch = await bcrypt.compare(password, manager.password);
 
     if (!isMatch) {
@@ -111,14 +98,18 @@ router.post("/login", (req, res) => {
         phone: manager.phone,
       },
     });
-  });
+  } catch (err) {
+    console.error("Database error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
+
 
 router.post(
   "/create-events",
   authenticateToken,
   uploadEvents.single("image"),
-  (req, res) => {
+  async (req, res) => {
     const {
       event_name,
       start_date,
@@ -126,7 +117,7 @@ router.post(
       description,
       type,
       status,
-      manager_id, // ✅ Extract manager_id from body
+      manager_id,
     } = req.body;
 
     const imageUrl = req.file ? req.file.path : null;
@@ -139,7 +130,7 @@ router.post(
       type,
       status,
       image: imageUrl,
-      manager_id, // ✅ Add manager_id here
+      manager_id,
     };
 
     const insertQuery = `
@@ -156,68 +147,65 @@ router.post(
       eventFields.type,
       eventFields.status,
       eventFields.image,
-      eventFields.manager_id, // ✅ Include in values
+      eventFields.manager_id,
     ];
-    db.query(insertQuery, queryParams, (err, result) => {
-      if (err) {
-        console.error("Insert error details:", err); // full error object in console
-        console.error("SQL Error Message:", err.sqlMessage); // readable MySQL message
-        return res
-          .status(500)
-          .json({ error: err.sqlMessage || "Something went wrong." });
-      }
 
+    try {
+      const [result] = await db.query(insertQuery, queryParams);
       res.status(200).json({
         message: "Event created successfully.",
         eventData: { id: result.insertId, ...eventFields },
       });
-    });
+    } catch (err) {
+      console.error("Insert error details:", err);
+      console.error("SQL Error Message:", err.sqlMessage);
+      res
+        .status(500)
+        .json({ error: err.sqlMessage || "Something went wrong." });
+    }
   }
 );
 
 //
 
 // Example route to fetch events for a specific manager
-router.get("/events/:managerId", authenticateToken, (req, res) => {
+router.get("/events/:managerId", authenticateToken, async (req, res) => {
   const managerId = req.params.managerId;
 
-  db.query(
-    "SELECT * FROM events WHERE manager_id = ? AND status = 'Approved'",
-    [managerId],
-    (error, results) => {
-      if (error) {
-        return res
-          .status(500)
-          .json({ message: "Error fetching events", error });
-      }
-
-      res.json(results);
-    }
-  );
+  try {
+    const [results] = await db.query(
+      "SELECT * FROM events WHERE manager_id = ? AND status = 'Approved'",
+      [managerId]
+    );
+    res.json(results);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching events", error });
+  }
 });
 
+
 // Get participants for a specific event
-router.get("/view-participants/:eventId", authenticateToken, (req, res) => {
+router.get("/view-participants/:eventId", authenticateToken, async (req, res) => {
   const eventId = req.params.eventId;
 
   const query = `
-    SELECT a.id, a.name, a.email,a.profile_image,a.phone
+    SELECT a.id, a.name, a.email, a.profile_image, a.phone
     FROM event_attendees ea
     JOIN attendees a ON ea.attendee_id = a.id
     WHERE ea.event_id = ?
   `;
 
-  db.query(query, [eventId], (err, results) => {
-    if (err) {
-      console.error("Error fetching participants:", err);
-      return res.status(500).json({ message: "Server error" });
-    }
-
+  try {
+    const [results] = await db.query(query, [eventId]);
     res.status(200).json(results);
-  });
+  } catch (err) {
+    console.error("Error fetching participants:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
-router.get("/view-feedback/:managerId", authenticateToken, (req, res) => {
+
+router.get("/view-feedback/:managerId", authenticateToken, async (req, res) => {
   const managerId = req.params.managerId;
 
   const query = `
@@ -234,14 +222,13 @@ router.get("/view-feedback/:managerId", authenticateToken, (req, res) => {
     ORDER BY f.submitted_at DESC
   `;
 
-  db.query(query, [managerId], (err, results) => {
-    if (err) {
-      console.error("Error fetching feedback:", err);
-      return res.status(500).json({ message: "Server error" });
-    }
-
+  try {
+    const [results] = await db.query(query, [managerId]);
     res.status(200).json(results);
-  });
+  } catch (err) {
+    console.error("Error fetching feedback:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 module.exports = router;
