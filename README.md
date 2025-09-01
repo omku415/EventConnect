@@ -2,16 +2,6 @@
 
 **Event Connect** is a full-stack platform that bridges the gap between event organizers and attendees. Attendees can discover and register for events, managers can create and manage their events, and admins oversee the system for smooth and secure operations.
 
-🔗 [GitHub Repository](https://github.com/omku415/EventConnect)
-
----
-
-## 📚 Table of Contents
-
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-
-
 ---
 
 ## 🚀 Features
