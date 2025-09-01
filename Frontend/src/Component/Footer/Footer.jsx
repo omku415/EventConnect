@@ -1,8 +1,8 @@
-import React from "react";
+import React from "react"; 
 import logo from "../../assets/Footerlogo.svg";
-import x from "../../assets/x.svg";
-import youtube from "../../assets/youtube.svg";
-import facebook from "../../assets/facebook.svg";
+import github from "../../assets/github.svg"; // GitHub icon
+import code from "../../assets/code.svg"; // Code icon
+import linkedin from "../../assets/linkedin.svg"; // LinkedIn icon
 
 function Footer() {
   return (
@@ -24,14 +24,14 @@ function Footer() {
       <nav>
         <h6 className="footer-title">Social</h6>
         <div className="grid grid-flow-col gap-4">
-          <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-            <img src={x} alt="Twitter / X" width={24} height={24} />
+          <a href="https://github.com/omku415" target="_blank" rel="noopener noreferrer">
+            <img src={github} alt="GitHub" width={24} height={24} />
           </a>
-          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-            <img src={youtube} alt="YouTube" width={24} height={24} />
+          <a href="https://leetcode.com/u/omku45/" target="_blank" rel="noopener noreferrer">
+            <img src={code} alt="Code" width={24} height={24} />
           </a>
-          <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-            <img src={facebook} alt="Facebook" width={24} height={24} />
+          <a href="https://www.linkedin.com/in/kumar-om45/" target="_blank" rel="noopener noreferrer">
+            <img src={linkedin} alt="LinkedIn" width={24} height={24} />
           </a>
         </div>
       </nav>

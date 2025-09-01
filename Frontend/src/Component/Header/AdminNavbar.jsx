@@ -1,17 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { logout } from "../../Redux/authSlice";
 import { useNavigate } from "react-router-dom";
 
-
 function AdminNavbar() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+  const closeMobileMenu = () => setMobileMenuOpen(false);
 
   const handleLogout = () => {
     dispatch(logout());
-    localStorage.removeItem("admin"); 
+    localStorage.removeItem("admin");
     navigate("/");
   };
 
@@ -20,7 +23,10 @@ function AdminNavbar() {
       {/* Left Side */}
       <div className="navbar-start">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <button
+            className="btn btn-ghost lg:hidden"
+            onClick={toggleMobileMenu}
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -35,22 +41,29 @@ function AdminNavbar() {
                 d="M4 6h16M4 12h8m-8 6h16"
               />
             </svg>
-          </div>
-          <ul
-            tabIndex={0}
-            className="menu dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow text-lg"
-          >
-            <li>
-              <Link to="/pending-managers">Verify Manager</Link>
-            </li>
-            <li>
-              <Link to="/verify-events">Verify Events</Link>
-            </li>
-            <li>
-              <Link to="/manage-user">Manage User</Link>
-            </li>
-          </ul>
+          </button>
+
+          {mobileMenuOpen && (
+            <ul className="menu dropdown-content bg-base-100 rounded-box z-10 mt-3 w-52 p-2 shadow text-lg">
+              <li>
+                <Link to="/pending-managers" onClick={closeMobileMenu}>
+                  Verify Manager
+                </Link>
+              </li>
+              <li>
+                <Link to="/verify-events" onClick={closeMobileMenu}>
+                  Verify Events
+                </Link>
+              </li>
+              <li>
+                <Link to="/manage-user" onClick={closeMobileMenu}>
+                  Manage User
+                </Link>
+              </li>
+            </ul>
+          )}
         </div>
+
         <Link to="/" className="btn btn-ghost text-2xl">
           EventConnect
         </Link>

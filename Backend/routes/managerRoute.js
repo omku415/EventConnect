@@ -185,24 +185,57 @@ router.get("/events/:managerId", authenticateToken, async (req, res) => {
 
 
 // Get participants for a specific event
-router.get("/view-participants/:eventId", authenticateToken, async (req, res) => {
-  const eventId = req.params.eventId;
-
-  const query = `
-    SELECT a.id, a.name, a.email, a.profile_image, a.phone
-    FROM event_attendees ea
-    JOIN attendees a ON ea.attendee_id = a.id
-    WHERE ea.event_id = ?
-  `;
+router.get("/view-participants", authenticateToken, async (req, res) => {
+  const managerId = req.user.userId;
 
   try {
-    const [results] = await db.query(query, [eventId]);
-    res.status(200).json(results);
+    const query = `
+      SELECT 
+        e.id AS eventId,
+        e.event_name,
+        a.id AS participantId,
+        a.name,
+        a.email,
+        a.profile_image,
+        a.phone
+      FROM events e
+      LEFT JOIN event_attendees ea ON e.id = ea.event_id
+      LEFT JOIN attendees a ON ea.attendee_id = a.id
+      WHERE e.manager_id = ?
+      ORDER BY e.id, a.name
+    `;
+
+    const [rows] = await db.query(query, [managerId]);
+
+    // Group participants by event
+    const eventsMap = {};
+    rows.forEach(row => {
+      if (!eventsMap[row.eventId]) {
+        eventsMap[row.eventId] = {
+          eventId: row.eventId,
+          eventName: row.event_name,
+          participants: [],
+        };
+      }
+      if (row.participantId) {
+        eventsMap[row.eventId].participants.push({
+          id: row.participantId,
+          name: row.name,
+          email: row.email,
+          profile_image: row.profile_image,
+          phone: row.phone,
+        });
+      }
+    });
+
+    const events = Object.values(eventsMap);
+    res.status(200).json(events);
   } catch (err) {
     console.error("Error fetching participants:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 router.get("/view-feedback/:managerId", authenticateToken, async (req, res) => {
