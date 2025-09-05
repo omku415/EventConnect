@@ -87,16 +87,16 @@ function AttendeeDashboard() {
   };
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-6 px-4 py-6">
+    <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-3 gap-3 px-2 py-4">
       {events.length === 0 ? (
-        <div className="text-center text-gray-500 mt-10">No events found.</div>
+        <div className="text-center text-gray-500 mt-6">No events found.</div>
       ) : (
         events.map((event) => {
           const hasJoined = joinedEvents.includes(event.id);
           const eventEnded = new Date(event.end_date) < new Date();
 
           return (
-            <div key={event.id} className="card bg-base-100 w-96 shadow-sm">
+            <div key={event.id} className="card bg-base-100 w-full shadow-sm">
               <figure>
                 <img src={event.image} alt={event.event_name} />
               </figure>
@@ -105,7 +105,7 @@ function AttendeeDashboard() {
                 <h2 className="card-title">{event.event_name}</h2>
                 <p>{event.description}</p>
 
-                <p className="text-sm text-gray-500 mt-2">
+                <p className="text-sm text-gray-500 mt-1">
                   <strong>Start:</strong>{" "}
                   {new Date(event.start_date).toLocaleDateString()} <br />
                   <strong>End:</strong>{" "}
@@ -118,7 +118,7 @@ function AttendeeDashboard() {
                   </p>
                 )}
 
-                <div className="flex justify-between items-center mt-4 gap-2">
+                <div className="flex justify-between items-center mt-3 gap-2">
                   <button
                     className="btn btn-primary"
                     onClick={() => handleJoin(event.id)}
