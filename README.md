@@ -29,7 +29,7 @@
 - **Backend**: Node.js with Express  
 - **Database**: SQL  
 - **Authentication**: JWT (JSON Web Token)  
-- **Email Service**: SendGrid  
+- **Email Service**: Nodemailer 
 - **State Management**: Redux  
 - **Image Hosting**: Cloudinary  
 
