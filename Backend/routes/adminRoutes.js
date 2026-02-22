@@ -251,4 +251,44 @@ router.delete("/delete-manager/:id", authenticateToken, async (req, res) => {
   }
 });
 
+// Get Admin Dashboard Stats
+router.get("/admin-stats", async (req, res) => {
+  try {
+    const [totalManagersResult] = await db.query(
+      "SELECT COUNT(*) AS totalManagers FROM managers"
+    );
+
+    const [pendingManagersResult] = await db.query(
+      "SELECT COUNT(*) AS pendingManagers FROM managers WHERE is_verified = false"
+    );
+
+    const [totalEventsResult] = await db.query(
+      "SELECT COUNT(*) AS totalEvents FROM events"
+    );
+
+    const [pendingEventsResult] = await db.query(
+      "SELECT COUNT(*) AS pendingEvents FROM events WHERE status = 'Pending'"
+    );
+
+    // NEW: total users
+    const [totalUsersResult] = await db.query(
+      "SELECT COUNT(*) AS totalUsers FROM attendees"
+    );
+
+    res.status(200).json({
+      totalManagers: totalManagersResult[0].totalManagers,
+      pendingManagers: pendingManagersResult[0].pendingManagers,
+      totalEvents: totalEventsResult[0].totalEvents,
+      pendingEvents: pendingEventsResult[0].pendingEvents,
+      totalUsers: totalUsersResult[0].totalUsers, // new
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      message: "Failed to fetch admin stats",
+    });
+  }
+});
+
 module.exports = router;
