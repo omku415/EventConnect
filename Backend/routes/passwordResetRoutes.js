@@ -4,7 +4,7 @@ const crypto = require("crypto");
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 require("dotenv").config();
-const sendPasswordResetEmail = require("../sendEmail/sendForgotPassword"); 
+const sendPasswordResetEmail = require("../utils/email/sendPasswordReset"); 
 
 const frontendUrl = process.env.APP_URL || process.env.FRONTEND_URL;
 

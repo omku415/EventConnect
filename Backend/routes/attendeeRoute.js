@@ -3,10 +3,9 @@ const router = express.Router();
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const authenticateToken = require("../authenticateToken");
+const authenticateToken = require("../middleware/authenticateToken");
 //for  cloud
-const upload = require("../Cloudinary/upload");
-const cloudinary = require("../Cloudinary/cloudinary");
+const upload = require("../utils/cloudinary/upload");
 require("dotenv").config(); // To load the environment variables
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;

@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const db = require("../config/db");
 const bcrypt = require("bcryptjs");
-const uploadResume = require("../Cloudinary/uploadResume");
-const uploadEvents = require("../Cloudinary/uploadEvents");
+const uploadResume = require("../utils/cloudinary/uploadResume");
+const uploadEvents = require("../utils/cloudinary/uploadEvents");
 const jwt = require("jsonwebtoken");
-const authenticateToken = require("../authenticateToken");
+const authenticateToken = require("../middleware/authenticateToken");
 require("dotenv").config();
 
 const jwtSecretKey = process.env.JWT_SECRET_KEY;

@@ -5,13 +5,13 @@ const bcrypt = require("bcrypt");
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 const db = require("../config/db"); // now promise pool
 const router = express.Router();
-const sendVerificationEmail = require("../sendEmail/sendVerificationEmail");
-const authenticateToken = require("../authenticateToken");
-const sendRejectionEmail = require("../sendEmail/sendRejectionEmail");
+const sendVerificationEmail = require("../utils/email/sendVerificationEmail");
+const authenticateToken = require("../middleware/authenticateToken");
+const sendRejectionEmail = require("../utils/email/sendRejectionEmail");
 const {
   sendEventApprovalEmail,
   sendEventRejectionEmail,
-} = require("../sendEmail/sendEventEmail");
+} = require("../utils/email/sendEventEmail");
 
 router.post("/login", async (req, res) => {
   try {
