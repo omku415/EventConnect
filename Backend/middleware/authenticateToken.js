@@ -1,28 +1,32 @@
-const jwt = require('jsonwebtoken');
-require("dotenv").config();
-const jwtSecretKey = process.env.JWT_SECRET_KEY
-const authenticateToken = (req, res, next) => {
-  // Get the token from the Authorization header
-  const token = req.headers['authorization']?.split(' ')[1];
- 
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
-  // If no token is provided
+dotenv.config();
+
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
+
+const authenticateToken = (req, res, next) => {
+  // Get token from Authorization header
+  const token = req.headers["authorization"]?.split(" ")[1];
+
+  // If token not provided
   if (!token) {
-    return res.status(401).json({ message: 'Token not provided' });
+    return res.status(401).json({ message: "Token not provided" });
   }
 
-  // Verify the token using the secret key
+  // Verify token
   jwt.verify(token, jwtSecretKey, (err, user) => {
     if (err) {
-      return res.status(403).json({ message: 'Invalid or expired token' });
+      return res.status(403).json({
+        message: "Invalid or expired token",
+      });
     }
 
-    // Attach the decoded user data to the request object
+    // Attach decoded user to request
     req.user = user;
 
-    // Proceed to the next middleware or route handler
     next();
   });
 };
 
-module.exports = authenticateToken;
+export default authenticateToken;

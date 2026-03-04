@@ -1,5 +1,7 @@
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -11,7 +13,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendPasswordResetEmail = async (toEmail, resetLink) => {
+export const sendPasswordResetEmail = async (toEmail, resetLink) => {
   const mailOptions = {
     from: process.env.SMTP_SENDER_EMAIL,
     to: toEmail,
@@ -40,5 +42,3 @@ const sendPasswordResetEmail = async (toEmail, resetLink) => {
     console.error("Error sending email:", error);
   }
 };
-
-module.exports = sendPasswordResetEmail;

@@ -1,11 +1,18 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
-const app = express();
-//It converts parse the JSON data and populate req.body with the JavaScript object:
-app.use(express.json());
+import dotenv from "dotenv";
+import express from "express";
+import cors from "cors";
 
-const db = require("./config/db");
+import attendeeRoutes from "./routes/attendeeRoute.js";
+import passwordResetRoutes from "./routes/authRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import managerRoutes from "./routes/managerRoute.js";
+
+dotenv.config();
+
+const app = express();
+
+// Parse JSON data
+app.use(express.json());
 
 app.use(
   cors({
@@ -13,19 +20,19 @@ app.use(
     credentials: true,
   })
 );
+
 app.options("*", cors());
-//attendee routes
-const attendeeRoutes = require("./routes/attendeeRoute");
+
+// Attendee routes
 app.use("/attendees", attendeeRoutes);
 
-//forgot password routes
-const passwordResetRoutes = require("./routes/passwordResetRoutes");
+// Forgot password routes
 app.use("/", passwordResetRoutes);
 
-const adminRoutes = require("./routes/adminRoutes");
+// Admin routes
 app.use("/admin", adminRoutes);
 
-const managerRoutes = require("./routes/managerRoute");
+// Manager routes
 app.use("/managers", managerRoutes);
 
 // Sample route
@@ -35,6 +42,7 @@ app.get("/", (req, res) => {
 
 // Start server
 const PORT = process.env.PORT;
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

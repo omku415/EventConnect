@@ -1,5 +1,7 @@
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Create Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -13,8 +15,9 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send event approval email
-const sendEventApprovalEmail = async (managerEmail) => {
+export const sendEventApprovalEmail = async (managerEmail) => {
   const subject = "Event Approval Notification";
+
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
       <h2 style="color: #4CAF50;">Event Approved ✅</h2>
@@ -25,6 +28,7 @@ const sendEventApprovalEmail = async (managerEmail) => {
       <p style="font-size: 0.9em; color: #999;">&copy; 2025 Event Connect. All rights reserved.</p>
     </div>
   `;
+
   const textContent =
     "Dear Manager, your event has been approved and is now live on Event Connect.";
 
@@ -36,15 +40,18 @@ const sendEventApprovalEmail = async (managerEmail) => {
       text: textContent,
       html: htmlContent,
     });
+
     console.log("Event approval email sent successfully to", managerEmail);
   } catch (error) {
     console.error("Error sending event approval email:", error);
   }
 };
 
+
 // Function to send event rejection email
-const sendEventRejectionEmail = async (managerEmail) => {
+export const sendEventRejectionEmail = async (managerEmail) => {
   const subject = "Event Rejection Notification";
+
   const htmlContent = `
     <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
       <h2 style="color: #FF4C4C;">Event Rejected ❌</h2>
@@ -55,6 +62,7 @@ const sendEventRejectionEmail = async (managerEmail) => {
       <p style="font-size: 0.9em; color: #999;">&copy; 2025 Event Connect. All rights reserved.</p>
     </div>
   `;
+
   const textContent =
     "Dear Manager, your event has been rejected. Please check the event details and make necessary changes.";
 
@@ -66,13 +74,9 @@ const sendEventRejectionEmail = async (managerEmail) => {
       text: textContent,
       html: htmlContent,
     });
+
     console.log("Event rejection email sent successfully to", managerEmail);
   } catch (error) {
     console.error("Error sending event rejection email:", error);
   }
-};
-
-module.exports = {
-  sendEventApprovalEmail,
-  sendEventRejectionEmail,
 };

@@ -1,5 +1,7 @@
-const nodemailer = require('nodemailer');
-require('dotenv').config();
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Create Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -13,7 +15,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Function to send manager verification email
-const sendVerificationEmail = async (managerEmail) => {
+export const sendVerificationEmail = async (managerEmail) => {
   const mailOptions = {
     from: process.env.SMTP_SENDER_EMAIL,
     to: managerEmail,
@@ -35,10 +37,8 @@ Your registration has been successfully verified by the admin. You can now log i
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log('Verification email sent successfully to', managerEmail);
+    console.log("Verification email sent successfully to", managerEmail);
   } catch (error) {
-    console.error('Error sending email:', error);
+    console.error("Error sending email:", error);
   }
 };
-
-module.exports = sendVerificationEmail;

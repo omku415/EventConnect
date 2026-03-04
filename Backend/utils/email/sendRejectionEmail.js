@@ -1,5 +1,7 @@
-const nodemailer = require("nodemailer");
-require("dotenv").config();
+import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Create Nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -12,8 +14,8 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-// Function to send manager rejection email directly
-const sendRejectionEmail = async (managerEmail) => {
+// Function to send manager rejection email
+export const sendRejectionEmail = async (managerEmail) => {
   const mailOptions = {
     from: process.env.SMTP_SENDER_EMAIL,
     to: managerEmail,
@@ -45,5 +47,3 @@ We truly appreciate the effort you put into your application and encourage you t
     console.error("Error sending email:", error);
   }
 };
-
-module.exports = sendRejectionEmail;
