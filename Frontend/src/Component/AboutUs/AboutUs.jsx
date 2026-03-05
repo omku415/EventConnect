@@ -1,5 +1,3 @@
-import React from "react";
-
 function AboutUs() {
   return (
     <section className="py-16 bg-gray-100">
