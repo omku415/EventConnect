@@ -1,18 +1,10 @@
-import nodemailer from "nodemailer";
+import { Resend } from "resend";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-// Create Nodemailer transporter
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure: process.env.SMTP_PORT == 465, // true for 465, false for 587
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 
 // Function to send event approval email
 export const sendEventApprovalEmail = async (managerEmail) => {
@@ -25,7 +17,7 @@ export const sendEventApprovalEmail = async (managerEmail) => {
       <p>Your event has been <strong>approved</strong> and is now live on <strong>Event Connect</strong>.</p>
       <p>Thank you for managing events with us!</p>
       <hr style="border: 0; border-top: 1px solid #eee;" />
-      <p style="font-size: 0.9em; color: #999;">&copy; 2025 Event Connect. All rights reserved.</p>
+      <p style="font-size: 0.9em; color: #999;">© 2025 Event Connect</p>
     </div>
   `;
 
@@ -33,10 +25,11 @@ export const sendEventApprovalEmail = async (managerEmail) => {
     "Dear Manager, your event has been approved and is now live on Event Connect.";
 
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_SENDER_EMAIL,
+
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM,
       to: managerEmail,
-      subject,
+      subject: subject,
       text: textContent,
       html: htmlContent,
     });
@@ -46,7 +39,6 @@ export const sendEventApprovalEmail = async (managerEmail) => {
     console.error("Error sending event approval email:", error);
   }
 };
-
 
 // Function to send event rejection email
 export const sendEventRejectionEmail = async (managerEmail) => {
@@ -59,7 +51,7 @@ export const sendEventRejectionEmail = async (managerEmail) => {
       <p>After reviewing your event submission, we regret to inform you that it has been <strong>rejected</strong>.</p>
       <p>Please review the event details and make the necessary changes.</p>
       <hr style="border: 0; border-top: 1px solid #eee;" />
-      <p style="font-size: 0.9em; color: #999;">&copy; 2025 Event Connect. All rights reserved.</p>
+      <p style="font-size: 0.9em; color: #999;">© 2025 Event Connect</p>
     </div>
   `;
 
@@ -67,10 +59,10 @@ export const sendEventRejectionEmail = async (managerEmail) => {
     "Dear Manager, your event has been rejected. Please check the event details and make necessary changes.";
 
   try {
-    await transporter.sendMail({
-      from: process.env.SMTP_SENDER_EMAIL,
+    await resend.emails.send({
+      from: process.env.EMAIL_FROM,
       to: managerEmail,
-      subject,
+      subject: subject,
       text: textContent,
       html: htmlContent,
     });
