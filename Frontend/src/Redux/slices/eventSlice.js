@@ -1,4 +1,3 @@
-// src/redux/eventSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {

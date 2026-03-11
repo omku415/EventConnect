@@ -1,12 +1,14 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Outlet } from "react-router";
-import Footer from "./Component/Footer/Footer";
-import MainNavbar from "./Component/Header/MainNavbar";
-import AttendeeNavbar from "./Component/Header/AttendeeNavbar";
-import AdminNavbar from "./Component/Header/AdminNavbar";
-import ManagerNavbar from "./Component/Header/ManagerNavbar";
-import { login } from "./Redux/authSlice"; // Adjust path if needed
+
+import Footer from "../Component/common/Footer/Footer";
+import MainNavbar from "../Component/common/Header/MainNavbar";
+import AttendeeNavbar from "../Component/common/Header/AttendeeNavbar";
+import AdminNavbar from "../Component/common/Header/AdminNavbar";
+import ManagerNavbar from "../Component/common/Header/ManagerNavbar";
+
+import { login } from "../Redux/slices/authSlice";
 
 function Layout() {
   const dispatch = useDispatch();

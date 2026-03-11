@@ -8,28 +8,41 @@ import {
 } from "react-router";
 
 import "./index.css";
-import Toast from "../Toast.jsx";
-import store from "./Redux/store";
-import Login from "./Component/Login/Login.jsx";
-import Layout from "./Layout.jsx";
-import Home from "./Component/Home/Home.jsx";
-import AboutUs from "./Component/AboutUs/AboutUs.jsx";
-import ContactUs from "./Component/ContactUs/ContactUs.jsx";
-import Register from "./Component/Register/Register.jsx";
-import AttendeeDashboard from "./Component/AttendeeDashboard/AttendeeDashboard.jsx";
-import UpdateProfile from "./Component/UpdateProfile/UpdateProfile.jsx";
-import ForgotPassword from "./Component/ForgotPassword/ForgotPassword.jsx";
-import ResetPassword from "./Component/ForgotPassword/ResetPassword.jsx";
-import AdminDashboard from "./Component/AdminDashboard/AdminDashboard.jsx";
-import ProtectedRoute from "./Component/ProtecetedRoutes/profileProtectedRoutes.jsx";
-import PendingManagers from "./Component/PendingManager/pendingManager.jsx";
-import ManagerDashboard from "./Component/ManagerDashboard/ManagerDashboard.jsx";
-import CreateEvent from "./Component/CreateEvents/CreateEvent.jsx";
-import EventDisplayA from "./Component/EventDisplay/EventDisplayA.jsx";
-import ViewParticipants from "./Component/ViewParticipant/ViewParticipants.jsx";
-import ManagerFeedbackList from "./Component/ShowFeedback/viewFeedback.jsx";
-import ViewFeedback from "./Component/ShowFeedback/viewFeedback.jsx";
-import AdminUserManagement from "./Component/ManageUser/AdminUserManagement.jsx";
+import Toast from "./Component/common/Toast/Toast.jsx";
+
+import store from "./Redux/store.js";
+
+import Login from "./pages/Auth/Login.jsx";
+import Layout from "./Layout/Layout.jsx";
+
+import Home from "./pages/landing/Home.jsx";
+import AboutUs from "./pages/landing/AboutUs.jsx";
+import ContactUs from "./pages/landing/ContactUs.jsx";
+
+import Register from "./pages/Auth/Register.jsx";
+import AttendeeDashboard from "./pages/Attendee/AttendeeDashboard.jsx";
+
+import UpdateProfile from "./Component/user/UpdateProfile.jsx";
+
+import ForgotPassword from "./pages/Auth/ForgotPassword.jsx";
+import ResetPassword from "./pages/Auth/ResetPassword.jsx";
+
+import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
+import ProtectedRoute from "./routes/profileProtectedRoutes.jsx";
+
+import PendingManagers from "./pages/Admin/pendingManager.jsx";
+
+import ManagerDashboard from "./pages/Manager/ManagerDashboard.jsx";
+
+import CreateEvent from "./Component/Event/CreateEvent.jsx";
+import EventDisplayA from "./Component/Event/EventDisplayA.jsx";
+
+import ViewParticipants from "./Component/user/ViewParticipants.jsx";
+
+
+import ViewFeedback from "./Component/Feedback/viewFeedback.jsx";
+
+import AdminUserManagement from "./pages/Admin/AdminUserManagement.jsx";
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<Layout />}>
@@ -64,7 +77,6 @@ const router = createBrowserRouter(
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     {" "}
-    {/*store setup*/}
     <RouterProvider router={router} />
     <Toast />
   </Provider>

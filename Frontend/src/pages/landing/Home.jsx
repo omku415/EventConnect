@@ -1,7 +1,6 @@
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import AboutUs from "../AboutUs/AboutUs";
-import ContactUs from "../ContactUs/ContactUs";
+import AboutUs from "./AboutUs";
+import ContactUs from "./ContactUs";
 
 function Home() {
   const navigate = useNavigate();

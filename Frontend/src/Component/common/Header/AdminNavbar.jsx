@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { logout } from "../../Redux/authSlice";
 import { useNavigate } from "react-router-dom";
+
+import { logout } from "../../../Redux/slices/authSlice";
 
 function AdminNavbar() {
   const dispatch = useDispatch();

@@ -1,8 +1,7 @@
-import React from "react"; 
-import logo from "../../assets/Footerlogo.svg";
-import github from "../../assets/github.svg"; // GitHub icon
-import code from "../../assets/code.svg"; // Code icon
-import linkedin from "../../assets/linkedin.svg"; // LinkedIn icon
+import logo from "../../../assets/Footerlogo.svg";
+import github from "../../../assets/github.svg";
+import code from "../../../assets/code.svg";
+import linkedin from "../../../assets/linkedin.svg";
 
 function Footer() {
   return (

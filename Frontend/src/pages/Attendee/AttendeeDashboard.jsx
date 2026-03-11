@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import Feedback from "../Feedback/Feedback";
+import Feedback from "../../Component/Feedback/Feedback";
 import {
   setSelectedEventId,
   clearSelectedEventId,
-} from "../../Redux/eventSlice";
+} from "../../Redux/slices/eventSlice";
 
 function AttendeeDashboard() {
   const [events, setEvents] = useState([]);

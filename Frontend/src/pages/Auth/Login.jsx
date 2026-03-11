@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { login } from "../../Redux/authSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { toast } from "react-toastify";
+
+import { login } from "../../Redux/slices/authSlice";
 
 function Login() {
   const [userType, setUserType] = useState("attendee");

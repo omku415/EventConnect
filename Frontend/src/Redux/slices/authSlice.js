@@ -1,4 +1,3 @@
-// src/redux/authSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 // Load specific key from localStorage

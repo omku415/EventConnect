@@ -1,5 +1,3 @@
-import React from "react";
-
 function ContactUs() {
   return (
     <section className="bg-gray-100 py-12 px-6">
